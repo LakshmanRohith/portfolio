@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV — Lakshman Rohith Sanagapalli</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0d17;
+            --bg2: #10132a;
+            --card: #141833;
+            --text: #e4e4f0;
+            --muted: #8e90a6;
+            --dim: #5c5e78;
+            --teal: #00cec9;
+            --purple: #a29bfe;
+            --pink: #fd79a8;
+            --gold: #fdcb6e;
+            --border: #1d1f3a;
+            --font: 'Inter', sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { color: var(--teal); text-decoration: none; }
+        a:hover { opacity: 0.8; }
+
+        /* Top bar */
+        .top-bar {
+            background: var(--bg2);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .top-bar a.back { color: var(--muted); font-size: 0.86rem; font-weight: 500; }
+        .top-bar a.back:hover { color: var(--text); }
+        .top-bar .actions { display: flex; gap: 12px; }
+        .btn {
+            padding: 8px 20px; border-radius: 8px; font-size: 0.84rem;
+            font-weight: 600; cursor: pointer; font-family: var(--font);
+            border: none; transition: 0.3s;
+        }
+        .btn-print { background: var(--teal); color: #0b0d17; }
+        .btn-resume { background: transparent; border: 1px solid var(--purple); color: var(--purple); }
+        .btn-resume:hover { background: var(--purple); color: #fff; }
+        .btn-print:hover { opacity: 0.9; }
+
+        /* CV wrapper */
+        .cv-wrapper {
+            max-width: 900px;
+            margin: 36px auto;
+            padding: 0 24px 60px;
+        }
+        .cv {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 48px 52px;
+            position: relative;
+            overflow: hidden;
+        }
+        .cv::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, var(--teal), var(--purple), var(--pink));
+        }
+
+        /* Header — left-aligned academic style */
+        .cv-header {
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid var(--border);
+        }
+        .cv-header h1 {
+            font-size: 2.1rem; font-weight: 800; letter-spacing: -1px;
+            margin-bottom: 2px;
+        }
+        .cv-header .cv-label {
+            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px;
+            color: var(--teal); font-weight: 600; margin-bottom: 14px;
+        }
+        .cv-header .contact-row {
+            display: flex; flex-wrap: wrap; gap: 8px 22px;
+            font-size: 0.82rem; color: var(--muted);
+        }
+        .cv-header .contact-row a { color: var(--muted); }
+        .cv-header .contact-row a:hover { color: var(--teal); }
+
+        /* Section */
+        .cv-section { margin-bottom: 30px; }
+        .cv-section-title {
+            font-size: 0.82rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 2.5px; color: var(--purple);
+            margin-bottom: 14px; padding-bottom: 6px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .cv-section-title::before {
+            content: ''; display: inline-block;
+            width: 8px; height: 8px; border-radius: 2px;
+            background: var(--purple);
+        }
+
+        /* Research interests */
+        .cv-interests {
+            color: var(--muted); font-size: 0.88rem; line-height: 1.75;
+            font-style: italic;
+        }
+
+        /* Education */
+        .cv-edu { margin-bottom: 14px; }
+        .cv-edu-header {
+            display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap;
+        }
+        .cv-edu-header h3 { font-size: 1rem; font-weight: 700; }
+        .cv-edu-date { font-size: 0.76rem; color: var(--dim); font-family: var(--mono); }
+        .cv-edu-degree { color: var(--teal); font-size: 0.88rem; font-weight: 500; }
+        .cv-edu-detail { color: var(--muted); font-size: 0.84rem; margin-top: 2px; }
+
+        /* Experience */
+        .cv-exp { margin-bottom: 24px; }
+        .cv-exp-header {
+            display: flex; justify-content: space-between; align-items: baseline;
+            flex-wrap: wrap; margin-bottom: 4px;
+        }
+        .cv-exp-header h3 { font-size: 1.02rem; font-weight: 700; }
+        .cv-exp-date { font-size: 0.76rem; color: var(--dim); font-family: var(--mono); }
+        .cv-exp-company { color: var(--teal); font-size: 0.88rem; font-weight: 500; margin-bottom: 6px; }
+
+        .cv-project-label {
+            font-size: 0.88rem; font-weight: 600; color: var(--gold);
+            margin: 12px 0 6px;
+        }
+
+        .cv-exp ul { list-style: none; margin-left: 0; }
+        .cv-exp li {
+            padding: 3px 0 3px 20px; position: relative;
+            color: var(--muted); font-size: 0.84rem; line-height: 1.7;
+        }
+        .cv-exp li::before {
+            content: '▸'; position: absolute; left: 2px;
+            color: var(--teal); font-size: 0.78rem;
+        }
+        .cv-exp li strong { color: var(--text); }
+
+        /* Publications */
+        .cv-pub {
+            margin-bottom: 16px; padding-left: 20px; position: relative;
+            font-size: 0.85rem; color: var(--muted); line-height: 1.7;
+        }
+        .cv-pub::before {
+            content: attr(data-num); position: absolute; left: 0;
+            color: var(--teal); font-family: var(--mono); font-size: 0.78rem; font-weight: 600;
+        }
+        .cv-pub strong { color: var(--text); }
+        .cv-pub em { color: var(--dim); }
+
+        /* Skills — tag-based layout */
+        .cv-skill-row { margin-bottom: 12px; }
+        .cv-skill-cat {
+            font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1.5px; color: var(--purple); margin-bottom: 6px;
+        }
+        .cv-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .cv-tag {
+            display: inline-block; padding: 3px 10px;
+            background: rgba(162,155,254,0.08); border: 1px solid rgba(162,155,254,0.15);
+            border-radius: 6px; font-size: 0.78rem; color: var(--muted);
+            font-family: var(--mono);
+        }
+
+        /* Academic projects */
+        .cv-aproj { margin-bottom: 14px; }
+        .cv-aproj h4 { font-size: 0.92rem; font-weight: 600; margin-bottom: 3px; }
+        .cv-aproj h4 span { font-weight: 400; color: var(--dim); font-size: 0.78rem; margin-left: 6px; }
+        .cv-aproj ul { list-style: none; }
+        .cv-aproj li {
+            padding: 2px 0 2px 20px; position: relative;
+            color: var(--muted); font-size: 0.84rem;
+        }
+        .cv-aproj li::before {
+            content: '▸'; position: absolute; left: 2px;
+            color: var(--teal); font-size: 0.78rem;
+        }
+
+        /* Certifications */
+        .cv-cert {
+            font-size: 0.85rem; color: var(--muted);
+            padding: 4px 0 4px 20px; position: relative;
+        }
+        .cv-cert::before {
+            content: '✓'; position: absolute; left: 2px;
+            color: var(--gold); font-weight: 700;
+        }
+        .cv-cert strong { color: var(--text); }
+
+        /* Leadership */
+        .cv-leader { font-size: 0.85rem; color: var(--muted); line-height: 1.7; }
+        .cv-leader strong { color: var(--text); }
+
+        /* Print — matches Word doc exactly */
+        @media print {
+            @page { size: 8.5in 11in; margin: 0.39in 0.5in 0.32in 0.5in; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            body { background: #fff !important; color: #000; font-size: 10pt; line-height: 1.3; }
+            .top-bar { display: none !important; }
+            .cv-wrapper { margin: 0; padding: 0; max-width: none; }
+            .cv { background: #fff !important; border: none; border-radius: 0; padding: 0; box-shadow: none; }
+            .cv::before { display: none !important; }
+
+            /* ── NAME: #000000, 16pt, bold, centered ── */
+            .cv-header h1 { color: #000 !important; font-size: 16pt; font-weight: 800; }
+            /* "Curriculum Vitae" — italic, 12pt */
+            .cv-header .cv-label { color: #000 !important; font-style: italic; font-size: 12pt; letter-spacing: 0; text-transform: none; }
+            .cv-header .contact-row { font-size: 9pt; }
+            .cv-header .contact-row span { color: #000 !important; }
+            .cv-header .contact-row a { color: #0563C1 !important; text-decoration: none; font-size: 9pt; }
+            .cv-header { border-bottom: 1.5px solid #000 !important; padding-bottom: 4px; margin-bottom: 4px; }
+
+            /* ── SECTION HEADINGS: H1 style — #000, 12pt, bold, uppercase, bottom border ── */
+            .cv-section { margin-bottom: 4pt; }
+            .cv-section-title {
+                color: #000 !important; font-size: 12pt; font-weight: 700;
+                text-transform: uppercase; letter-spacing: 1.5px;
+                border-bottom: 1.5px solid #000 !important; padding-bottom: 1pt; margin-bottom: 3pt;
+            }
+            .cv-section-title::before { background: #000 !important; }
+
+            /* ── RESEARCH INTERESTS: italic ── */
+            .cv-interests { color: #000 !important; font-size: 10pt; font-style: italic; }
+
+            /* ── EXPERIENCE ── */
+            .cv-exp { margin-bottom: 6px; }
+            /* Job title: 10pt, bold */
+            .cv-exp-header h3 { color: #000 !important; font-size: 10pt; font-weight: 700; }
+            /* Company: regular weight */
+            .cv-exp-company { color: #000 !important; font-size: 10pt; font-weight: 400; }
+            /* Date: italic */
+            .cv-exp-date, .cv-edu-date { color: #000 !important; font-size: 10pt; font-style: italic; font-family: var(--font) !important; }
+            /* Project labels: bold (not italic) */
+            .cv-project-label { color: #000 !important; font-weight: 700; font-size: 10pt; margin: 4px 0 2px; }
+            /* Bullet points */
+            .cv-exp li { color: #000 !important; font-size: 10pt; line-height: 1.3; padding: 1px 0 1px 18px; }
+            .cv-exp li strong { color: #000 !important; font-weight: 700; }
+            .cv-exp li::before, .cv-aproj li::before { color: #000 !important; }
+
+            /* ── PUBLICATIONS ── */
+            .cv-pub { color: #000 !important; font-size: 10pt; line-height: 1.3; margin-bottom: 8px; }
+            .cv-pub strong { color: #000 !important; font-weight: 700; }
+            .cv-pub em { color: #000 !important; font-style: italic; }
+            .cv-pub::before { color: #000 !important; }
+
+            /* ── SKILLS: bold category, tags with border ── */
+            .cv-skill-cat { color: #000 !important; font-size: 9pt; font-weight: 700; }
+            .cv-tag { background: transparent !important; border: 1px solid #999 !important; color: #000 !important; font-size: 9pt; font-family: var(--font); border-radius: 3px; }
+
+            /* ── ACADEMIC PROJECTS ── */
+            .cv-aproj li { color: #000 !important; font-size: 10pt; line-height: 1.3; }
+            .cv-aproj { margin-bottom: 6px; }
+            .cv-aproj h4 { color: #000 !important; font-weight: 700; }
+            .cv-aproj h4 span { color: #555 !important; font-weight: 400; }
+
+            /* ── EDUCATION ── */
+            .cv-edu-header h3 { color: #000 !important; font-size: 10pt; font-weight: 700; }
+            .cv-edu-degree { color: #000 !important; font-size: 10pt; font-weight: 700; }
+            .cv-edu-detail { color: #000 !important; font-size: 10pt; }
+
+            /* ── CERTIFICATIONS ── */
+            .cv-cert { color: #000 !important; font-size: 10pt; }
+            .cv-cert strong { color: #000 !important; font-weight: 700; }
+            .cv-cert::before { color: #27ae60 !important; }
+
+            /* ── LEADERSHIP ── */
+            .cv-leader { color: #000 !important; font-size: 10pt; }
+            .cv-leader strong { color: #000 !important; font-weight: 700; }
+
+            /* ── LINKS: Word hyperlink blue ── */
+            a { color: #0563C1 !important; }
+        }
+
+        @media (max-width: 600px) {
+            .cv { padding: 24px 20px; }
+            .cv-exp-header, .cv-edu-header { flex-direction: column; }
+            .cv-header .contact-row { flex-direction: column; gap: 4px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="index.html" class="back">&larr; Back to Portfolio</a>
+        <div class="actions">
+            <a href="resume.html" class="btn btn-resume">View Resume</a>
+            <button class="btn btn-print" onclick="window.print()">Print / Save PDF</button>
+        </div>
+    </div>
+
+    <div class="cv-wrapper">
+        <div class="cv">
+
+            <!-- Header -->
+            <div class="cv-header">
+                <h1>Lakshman Rohith Sanagapalli</h1>
+                <div class="cv-label">Curriculum Vitae</div>
+                <div class="contact-row">
+                    <span>Guntur, Andhra Pradesh, India</span>
+                    <span>+91-8309935515</span>
+                    <a href="mailto:lakshmansanagapalli@gmail.com">lakshmansanagapalli@gmail.com</a>
+                    <a href="https://www.linkedin.com/in/lakshman-rohith-sanagapalli/" target="_blank">LinkedIn: linkedin.com/in/lakshman-rohith</a>
+                    <a href="https://github.com/lakshmanrohith" target="_blank">GitHub: github.com/lakshmanrohith</a>
+                </div>
+            </div>
+
+            <!-- Research Interests -->
+            <div class="cv-section">
+                <div class="cv-section-title">Research Interests</div>
+                <p class="cv-interests">
+                    Medical imaging and computer-aided diagnosis, vision-language models for clinical applications, 
+                    automated radiology report generation, deep learning optimization for resource-constrained environments, 
+                    fairness and bias detection in healthcare AI systems, real-time speech processing and speaker identification.
+                </p>
+            </div>
+
+            <!-- Education -->
+            <div class="cv-section">
+                <div class="cv-section-title">Education</div>
+                <div class="cv-edu">
+                    <div class="cv-edu-header">
+                        <h3>Vellore Institute of Technology, AP (VIT-AP University)</h3>
+                        <span class="cv-edu-date">Aug 2021 — Jul 2026</span>
+                    </div>
+                    <div class="cv-edu-degree">Integrated M.Tech in Software Engineering</div>
+                    <div class="cv-edu-detail">CGPA: 8.58/10</div>
+                    <div class="cv-edu-detail">Relevant Coursework: Machine Learning, Deep Learning, Computer Vision, NLP, Data Structures, Algorithms, Database Management Systems, Software Engineering</div>
+                </div>
+            </div>
+
+            <!-- Professional Experience -->
+            <div class="cv-section">
+                <div class="cv-section-title">Professional Experience</div>
+
+                <div class="cv-exp">
+                    <div class="cv-exp-header">
+                        <h3>AI/ML Engineering Intern</h3>
+                        <span class="cv-exp-date">Sep 2025 — Present</span>
+                    </div>
+                    <div class="cv-exp-company">Philips Healthcare &middot; Bangalore, India</div>
+
+                    <div class="cv-project-label">Project 1: Automated Brain MRI Radiology Report Generation (CARE+ Framework)</div>
+                    <ul>
+                        <li>Architected the <strong>CARE+</strong> loss framework — a novel multi-component objective with 8 specialized losses: Language Modeling, Severity-Weighted Classification (SWC), Anatomical Causality Constraints (ACC), Uncertainty-Aware Token Loss (UAT), Clinical Entity Alignment (CEAL), Contrastive Anti-Hallucination (CAH), Negation Loss, and Critical Finding Loss.</li>
+                        <li>Fine-tuned <strong>Google MedGemma-1.5-4B-IT</strong> using QLoRA (4-bit NF4, LoRA rank 64, alpha 128) on NVIDIA RTX A6000 (50.9 GB), training on <strong>997 brain MRI patients</strong> from the MR-RATE dataset.</li>
+                        <li>Introduced <strong>Factored Chain-of-Generation (FCG)</strong> — Phase 1 extracts structured clinical findings; Phase 2 synthesizes grounded narrative reports, reducing hallucination by forcing explicit reasoning before composition.</li>
+                        <li>Formulated <strong>VLCC</strong> and <strong>QVHD</strong> losses to address modality-specific hallucination patterns from 4-bit quantization artifacts.</li>
+                        <li>Engineered a <strong>BiomedCLIP-based RAG pipeline</strong> for image similarity retrieval, computing embeddings over training images and retrieving top-k similar cases during inference.</li>
+                        <li>Delivered <strong>30% hallucination reduction</strong>, <strong>+99% BLEU-4</strong>, <strong>+42% METEOR</strong> on MIMIC-CXR, and <strong>+213% BLEU-4</strong> on Indiana University with RAG.</li>
+                        <li>Processed multi-sequence brain MRI data (T2-weighted and FLAIR) as 3&times;3 montage grids (6 montages per patient), with brain masking and RAS orientation normalization.</li>
+                        <li>Integrated <strong>Adaptive Uncertainty Learning (AUL)</strong> for dynamic loss weight balancing via learnable log-variance parameters.</li>
+                    </ul>
+
+                    <div class="cv-project-label">Project 2: MITRA 2.0 — Multi-Speaker Intelligent Transcription</div>
+                    <ul>
+                        <li>Launched a real-time multi-speaker meeting transcription platform using <strong>Azure Cognitive Services Speech SDK</strong> with continuous recognition and speaker diarization.</li>
+                        <li>Configured speaker voice enrollment using <strong>SpeechBrain ECAPA-TDNN</strong> neural embeddings with cosine similarity matching (50% threshold).</li>
+                        <li>Connected <strong>Azure OpenAI (GPT)</strong> for automated speaker name extraction with a two-stage pipeline: candidate extraction → speaker attribution.</li>
+                        <li>Shipped a <strong>Streamlit-based web interface</strong> supporting 11 languages, live WebRTC audio capture, file upload transcription, and automated meeting summaries.</li>
+                        <li>Established robust false-positive filtering using curated dictionaries of common non-name words, product names, and organizational terms.</li>
+                    </ul>
+
+                    <div class="cv-project-label">Project 3: Medical Bias Intelligence Dashboard</div>
+                    <ul>
+                        <li>Created a multi-agent fairness audit platform for medical datasets spanning the complete data science lifecycle.</li>
+                        <li>Structured a <strong>5-agent LLM-powered architecture</strong>: Orchestrator, Data Analysis, Representation Bias, Feature Bias, and Label Bias agents, each with specialized tool-calling.</li>
+                        <li>Coded <strong>11 automated analysis tools</strong> including data profiling, correlation analysis, outlier detection, chi-square bias measurement, and class imbalance quantification.</li>
+                        <li>Enabled multiple input formats: DICOM medical images, NIfTI volumes, COCO annotations, CSV/JSON tabular data, and PDF clinical documents.</li>
+                        <li>Incorporated bias mitigation: SMOTE, ADASYN, RandomOverSampler, RandomUnderSampler, and SMOTETomek.</li>
+                        <li>Assembled a model training pipeline with scikit-learn and XGBoost including hyperparameter tuning, cross-validation, SHAP explainability, and automated PDF/PPTX report generation.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Publications -->
+            <div class="cv-section">
+                <div class="cv-section-title">Research &amp; Publications</div>
+                <div class="cv-pub" data-num="[1]">
+                    B. Lokesh, <strong>L. R. Sanagapalli</strong>, and H. Koppolu, "Pneumonia Detection Using Deep CNN Algorithms," in <em>Proc. IEEE International Symposium on Electronic Design (ISED)</em>, 2024. DOI: 10.1109/ISED63599.2024.10956182<br>
+                    Trained a hybrid ResNet152V2 + custom CNN for pneumonia detection from CT scans. Reached <strong>99.09% accuracy</strong> on 16,000+ labeled images from 7 repositories. Visualized with Grad-CAM; mitigated overfitting via augmentation and early stopping.
+                </div>
+                <div class="cv-pub" data-num="[2]">
+                    Dr. S. P. Siddique Ibrahim, <strong>L. R. Sanagapalli</strong>, P. Nikhilesh, B. Krishna Gayatri, and K. Hasmithanjana, "Optimizing Cost Estimation Using YOLOv9," in <em>Proc. IEEE ICICNIS</em>, 2024. DOI: 10.1109/ICICNIS64247.2024.10823244<br>
+                    Automated wall measurement and painting cost estimation using YOLOv9 with camera focal length calibration, cutting manual measurement time by <strong>85%</strong> and raising accuracy by <strong>35%</strong>.
+                </div>
+            </div>
+
+            <!-- Technical Skills -->
+            <div class="cv-section">
+                <div class="cv-section-title">Technical Skills</div>
+
+                <div class="cv-skill-row">
+                    <div class="cv-skill-cat">Programming Languages</div>
+                    <div class="cv-tags">
+                        <span class="cv-tag">Python</span><span class="cv-tag">Java</span>
+                        <span class="cv-tag">JavaScript</span><span class="cv-tag">SQL (MySQL)</span>
+                    </div>
+                </div>
+                <div class="cv-skill-row">
+                    <div class="cv-skill-cat">Machine Learning</div>
+                    <div class="cv-tags">
+                        <span class="cv-tag">PyTorch</span><span class="cv-tag">TensorFlow</span>
+                        <span class="cv-tag">HuggingFace Transformers</span><span class="cv-tag">scikit-learn</span>
+                        <span class="cv-tag">XGBoost</span>
+                    </div>
+                </div>
+                <div class="cv-skill-row">
+                    <div class="cv-skill-cat">Deep Learning</div>
+                    <div class="cv-tags">
+                        <span class="cv-tag">CNNs (ResNet, VGG)</span>
+                        <span class="cv-tag">Vision-Language Models</span>
+                        <span class="cv-tag">LoRA/QLoRA</span>
+                        <span class="cv-tag">Transformers</span>
+                        <span class="cv-tag">YOLO</span>
+                    </div>
+                </div>
+                <div class="cv-skill-row">
+                    <div class="cv-skill-cat">NLP &amp; Gen AI</div>
+                    <div class="cv-tags">
+                        <span class="cv-tag">LLMs</span><span class="cv-tag">RAG</span>
+                        <span class="cv-tag">Prompt Engineering</span><span class="cv-tag">Text Generation</span>
+                        <span class="cv-tag">Speech-to-Text</span>
+                    </div>
+                </div>
+                <div class="cv-skill-row">
+                    <div class="cv-skill-cat">Computer Vision</div>
+                    <div class="cv-tags">
+                        <span class="cv-tag">Medical Imaging (MRI, CT, X-ray)</span>
+                        <span class="cv-tag">Object Detection</span>
+                        <span class="cv-tag">NIfTI/DICOM</span>
+                        <span class="cv-tag">OpenCV</span>
+                        <span class="cv-tag">Grad-CAM</span>
+                    </div>
+                </div>
+                <div class="cv-skill-row">
+                    <div class="cv-skill-cat">Cloud &amp; Tools</div>
+                    <div class="cv-tags">
+                        <span class="cv-tag">Azure (Cognitive Services, Speech SDK, OpenAI)</span>
+                        <span class="cv-tag">AWS</span>
+                        <span class="cv-tag">Git</span><span class="cv-tag">Docker</span>
+                        <span class="cv-tag">Streamlit</span><span class="cv-tag">SpeechBrain</span>
+                        <span class="cv-tag">NVIDIA CUDA</span>
+                    </div>
+                </div>
+                <div class="cv-skill-row">
+                    <div class="cv-skill-cat">Methodologies</div>
+                    <div class="cv-tags">
+                        <span class="cv-tag">Agile</span>
+                        <span class="cv-tag">Experiment Tracking</span>
+                        <span class="cv-tag">BLEU / ROUGE / METEOR</span>
+                        <span class="cv-tag">RadGraph F1</span>
+                        <span class="cv-tag">Statistical Analysis</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Academic Projects -->
+            <div class="cv-section">
+                <div class="cv-section-title">Academic Projects</div>
+
+                <div class="cv-aproj">
+                    <h4>Pneumonia Detection using Deep CNNs <span>| TensorFlow, OpenCV, Python, AWS</span></h4>
+                    <ul>
+                        <li>Trained a medical imaging classification model using a hybrid ResNet152V2 + custom CNN, reaching <strong>99.09% accuracy</strong> on pneumonia detection from CT scans.</li>
+                        <li>Curated and preprocessed 16,000+ labeled chest X-ray and CT images from 7 open-source datasets with stratified sampling and data augmentation.</li>
+                        <li>Visualized decision regions with Grad-CAM heatmaps to validate clinical relevance of model predictions.</li>
+                        <li>Mitigated overfitting through early stopping, learning rate scheduling, and image augmentation.</li>
+                    </ul>
+                </div>
+                <div class="cv-aproj">
+                    <h4>AI Measurement Tool for Construction <span>| YOLOv9, OpenCV, Camera Calibration</span></h4>
+                    <ul>
+                        <li>Constructed a real-time wall area estimation system using YOLOv9, cutting manual measuring time by <strong>85%</strong>.</li>
+                        <li>Raised pixel-to-meter conversion accuracy by <strong>35%</strong> through custom camera calibration with focal length estimation.</li>
+                        <li>Added depth estimation logic for multi-perspective dimensioning from mobile devices.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Certifications -->
+            <div class="cv-section">
+                <div class="cv-section-title">Certifications</div>
+                <div class="cv-cert"><strong>Microsoft Certified: Azure AI Fundamentals (AI-900)</strong></div>
+                <div class="cv-cert"><strong>Google Generative AI Developer Track</strong></div>
+                <div class="cv-cert"><strong>Full Stack Web Development</strong> (Comprehensive)</div>
+                <div class="cv-cert"><strong>Introduction to Large Language Models</strong></div>
+            </div>
+
+            <!-- Leadership -->
+            <div class="cv-section">
+                <div class="cv-section-title">Leadership</div>
+                <p class="cv-leader">
+                    <strong>President, Pennify Chapter, VIT-AP University (2023–2024)</strong> — Led a 15-member organizing committee 
+                    to host 4 AI hackathons and entrepreneurship events, attracting 200+ participants and securing faculty and industry 
+                    sponsorship for campus innovation programs.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

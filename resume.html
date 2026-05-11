@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume — Lakshman Rohith Sanagapalli</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --bg2: #111118;
+            --card: #16161f;
+            --text: #e8e8ed;
+            --muted: #9898a6;
+            --dim: #6b6b7b;
+            --accent: #6c5ce7;
+            --accent2: #00cec9;
+            --accent3: #fd79a8;
+            --border: #1e1e2e;
+            --font: 'Inter', sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { color: var(--accent2); text-decoration: none; }
+        a:hover { opacity: 0.8; }
+
+        /* Top bar */
+        .top-bar {
+            background: var(--bg2);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .top-bar a.back { color: var(--muted); font-size: 0.86rem; font-weight: 500; }
+        .top-bar a.back:hover { color: var(--text); }
+        .top-bar .actions { display: flex; gap: 12px; }
+        .btn {
+            padding: 8px 20px; border-radius: 8px; font-size: 0.84rem;
+            font-weight: 600; cursor: pointer; font-family: var(--font);
+            border: none; transition: 0.3s;
+        }
+        .btn-print { background: var(--accent); color: #fff; }
+        .btn-print:hover { opacity: 0.9; }
+        .btn-cv { background: transparent; border: 1px solid var(--accent2); color: var(--accent2); }
+        .btn-cv:hover { background: var(--accent2); color: #0a0a0f; }
+
+        /* Resume wrapper — mimics a single A4 page */
+        .resume-wrapper {
+            max-width: 860px;
+            margin: 36px auto;
+            padding: 0 24px 60px;
+        }
+        .resume {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 40px 44px;
+        }
+
+        /* Header — centered, clean */
+        .r-header {
+            text-align: center;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+        .r-header h1 {
+            font-size: 1.9rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 8px;
+        }
+        .r-header .contact-line {
+            display: flex; justify-content: center; flex-wrap: wrap;
+            gap: 6px 18px; font-size: 0.82rem; color: var(--muted);
+        }
+        .r-header .contact-line a { color: var(--muted); }
+        .r-header .contact-line a:hover { color: var(--accent); }
+        .r-header .contact-line .sep { color: var(--dim); }
+
+        /* Section */
+        .r-section { margin-bottom: 22px; }
+        .r-section-title {
+            font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 2px; color: var(--accent);
+            margin-bottom: 10px; padding-bottom: 5px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Summary */
+        .r-summary { color: var(--muted); font-size: 0.86rem; line-height: 1.65; }
+
+        /* Experience */
+        .r-exp { margin-bottom: 16px; }
+        .r-exp-row {
+            display: flex; justify-content: space-between; align-items: baseline;
+            flex-wrap: wrap; margin-bottom: 2px;
+        }
+        .r-exp-row h3 { font-size: 0.95rem; font-weight: 700; }
+        .r-exp-row h3 .r-company { font-weight: 500; color: var(--accent2); }
+        .r-date { font-size: 0.74rem; color: var(--dim); font-family: var(--mono); }
+
+        .r-sub { font-size: 0.84rem; font-weight: 600; color: var(--accent3); margin: 8px 0 4px; }
+
+        .r-exp ul, .r-proj ul { list-style: none; }
+        .r-exp li, .r-proj li {
+            padding: 2px 0 2px 16px; position: relative;
+            color: var(--muted); font-size: 0.83rem; line-height: 1.6;
+        }
+        .r-exp li::before, .r-proj li::before {
+            content: '•'; position: absolute; left: 2px;
+            color: var(--accent); font-weight: 700;
+        }
+        .r-exp li strong, .r-proj li strong { color: var(--text); }
+
+        /* Skills — inline grid */
+        .r-skills-grid {
+            display: grid; grid-template-columns: 130px 1fr;
+            gap: 6px 14px;
+        }
+        .r-skill-label { font-size: 0.8rem; font-weight: 600; color: var(--text); }
+        .r-skill-value { font-size: 0.8rem; color: var(--muted); }
+
+        /* Projects */
+        .r-proj { margin-bottom: 12px; }
+        .r-proj-header {
+            display: flex; justify-content: space-between; align-items: baseline;
+            flex-wrap: wrap; margin-bottom: 2px;
+        }
+        .r-proj-header h4 { font-size: 0.9rem; font-weight: 600; }
+        .r-proj-header .r-tech {
+            font-size: 0.74rem; color: var(--accent); font-family: var(--mono);
+        }
+
+        /* Education table */
+        .r-edu { margin-bottom: 10px; }
+        .r-edu-row {
+            display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap;
+        }
+        .r-edu-row h3 { font-size: 0.92rem; font-weight: 700; }
+        .r-edu-degree { color: var(--accent2); font-size: 0.84rem; font-weight: 500; }
+        .r-edu-detail { color: var(--muted); font-size: 0.82rem; }
+
+        /* Certs */
+        .r-certs { color: var(--muted); font-size: 0.83rem; line-height: 1.7; }
+        .r-certs strong { color: var(--text); }
+
+        /* Print — exact Word doc match: Lakshman_Rohith_Resume.docx */
+        @media print {
+            @page { size: 8.5in 11in; margin: 0.39in 0.5in 0.32in 0.5in; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            body { background: #fff !important; color: #000; font-size: 9pt; line-height: 1.3; }
+            .top-bar { display: none !important; }
+            .resume-wrapper { margin: 0; padding: 0; max-width: none; }
+            .resume { background: #fff !important; border: none; border-radius: 0; padding: 0; box-shadow: none; }
+
+            /* ── NAME: #1F497D navy, 15pt, bold, centered ── */
+            .r-header h1 { color: #1F497D !important; font-size: 15pt; font-weight: 800; margin-bottom: 2px; }
+            .r-header { border-bottom: none; padding-bottom: 4px; margin-bottom: 2px; }
+            .r-header .contact-line { font-size: 9pt; }
+            .r-header .contact-line, .r-header .contact-line span { color: #000 !important; }
+            .r-header .contact-line a { color: #0563C1 !important; text-decoration: none; }
+            .r-header .contact-line .sep { color: #000 !important; }
+
+            /* ── SECTION HEADINGS: #1F497D, 10.5pt, bold, uppercase, navy bottom border ── */
+            .r-section { margin-bottom: 3pt; }
+            .r-section-title {
+                color: #1F497D !important; font-size: 10.5pt; font-weight: 700;
+                text-transform: uppercase; letter-spacing: 1.5px;
+                border-bottom: 1.5px solid #1F497D !important; padding-bottom: 1pt; margin-bottom: 2pt;
+            }
+
+            /* ── SUMMARY: black, 9pt ── */
+            .r-summary { color: #000 !important; font-size: 9pt; }
+
+            /* ── EXPERIENCE ── */
+            .r-exp { margin-bottom: 4px; }
+            /* Job title: 10pt, bold, black */
+            .r-exp-row h3 { font-size: 10pt; color: #000 !important; font-weight: 700; }
+            /* Company after pipe: regular weight */
+            .r-exp-row h3 .r-company { color: #000 !important; font-weight: 400; }
+            /* Date: 9pt, italic */
+            .r-date { color: #000 !important; font-size: 9pt; font-style: italic; font-family: var(--font) !important; }
+            /* Sub-project labels: bold + italic (matches Word) */
+            .r-sub { color: #000 !important; font-weight: 700; font-style: italic; font-size: 9pt; margin: 4px 0 1px; }
+            /* Bullet points: 9pt black */
+            .r-exp li, .r-proj li { color: #000 !important; font-size: 9pt; line-height: 1.3; padding: 0 0 0 14px; }
+            .r-exp li strong, .r-proj li strong { color: #000 !important; font-weight: 700; }
+            .r-exp li::before, .r-proj li::before { color: #000 !important; }
+
+            /* ── TECHNICAL SKILLS: bold label, regular value ── */
+            .r-skills-grid { gap: 1px 12px; }
+            .r-skill-label { color: #000 !important; font-size: 9pt; font-weight: 700; }
+            .r-skill-value { color: #000 !important; font-size: 9pt; font-weight: 400; }
+
+            /* ── PROJECTS: title bold, IEEE links blue ── */
+            .r-proj { margin-bottom: 4px; }
+            .r-proj-header h4 { color: #000 !important; font-size: 9.5pt; font-weight: 700; }
+            .r-proj-header .r-tech { font-size: 8pt; font-family: var(--font); }
+            .r-proj-header .r-tech a { color: #0563C1 !important; text-decoration: underline; }
+
+            /* ── EDUCATION ── */
+            .r-edu { margin-bottom: 2px; }
+            .r-edu-row h3 { color: #000 !important; font-size: 10pt; font-weight: 700; }
+            .r-edu-degree { color: #000 !important; font-size: 9pt; font-style: italic; }
+            .r-edu-detail { color: #000 !important; font-size: 9pt; }
+
+            /* ── CERTS & LEADERSHIP ── */
+            .r-certs { color: #000 !important; font-size: 9pt; }
+            .r-certs strong { color: #000 !important; font-weight: 700; }
+
+            /* ── LINKS: Word hyperlink blue ── */
+            a { color: #0563C1 !important; }
+        }
+        @media (max-width: 600px) {
+            .resume { padding: 24px 20px; }
+            .r-exp-row, .r-proj-header, .r-edu-row { flex-direction: column; }
+            .r-skills-grid { grid-template-columns: 1fr; }
+            .r-header .contact-line { flex-direction: column; gap: 4px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="index.html" class="back">&larr; Back to Portfolio</a>
+        <div class="actions">
+            <a href="cv.html" class="btn btn-cv">View Full CV</a>
+            <button class="btn btn-print" onclick="window.print()">Print / Save PDF</button>
+        </div>
+    </div>
+
+    <div class="resume-wrapper">
+        <div class="resume">
+
+            <!-- Header -->
+            <div class="r-header">
+                <h1>Lakshman Rohith Sanagapalli</h1>
+                <div class="contact-line">
+                    <span>Guntur, AP, India</span>
+                    <span class="sep">|</span>
+                    <span>+91-8309935515</span>
+                    <span class="sep">|</span>
+                    <a href="mailto:lakshmansanagapalli@gmail.com">lakshmansanagapalli@gmail.com</a>
+                    <span class="sep">|</span>
+                    <a href="https://www.linkedin.com/in/lakshman-rohith-sanagapalli/" target="_blank">LinkedIn</a>
+                    <span class="sep">|</span>
+                    <a href="https://github.com/lakshmanrohith" target="_blank">GitHub</a>
+                    <span class="sep">|</span>
+                    <a href="https://leetcode.com/lakshmanrohith" target="_blank">LeetCode</a>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="r-section">
+                <div class="r-section-title">Summary</div>
+                <p class="r-summary">
+                    AI/ML Engineer at Philips Healthcare (8+ months). Architected an 8-component loss framework that cut hallucinations 30% in automated brain MRI report generation across 997 patients. 2 IEEE papers (99.09% pneumonia detection accuracy; 85% faster measurement via YOLOv9). Proficient in PyTorch, TensorFlow, Azure, LoRA/QLoRA fine-tuning.
+                </p>
+            </div>
+
+            <!-- Experience -->
+            <div class="r-section">
+                <div class="r-section-title">Experience</div>
+
+                <div class="r-exp">
+                    <div class="r-exp-row">
+                        <h3>AI/ML Engineering Intern &nbsp;<span class="r-company">| Philips Healthcare, Bangalore</span></h3>
+                        <span class="r-date">Sep 2025 — Present</span>
+                    </div>
+
+                    <div class="r-sub">Automated Brain MRI Report Generation (CARE+ Framework)</div>
+                    <ul>
+                        <li>Architected a novel <strong>CARE+ loss framework</strong> with 8 specialized components (SWC, ACC, UAT, CEAL, CAH, Negation, Critical Finding, FCG), reducing hallucinated findings by <strong>30%</strong> across 997 patient scans.</li>
+                        <li>Fine-tuned <strong>Google MedGemma-4B</strong> using LoRA (rank 64) with 4-bit NF4 quantization on NVIDIA RTX A6000, improving <strong>BLEU-4 by 99%</strong> and <strong>METEOR by 42%</strong> on MIMIC-CXR benchmarks.</li>
+                        <li>Introduced <strong>Factored Chain-of-Generation (FCG)</strong> separating structured finding extraction from narrative synthesis, cutting factual errors in neuroradiology reports.</li>
+                        <li>Engineered a <strong>BiomedCLIP-based RAG pipeline</strong> retrieving top-k similar cases at inference, boosting <strong>BLEU-4 by 213%</strong> on the Indiana University chest X-ray dataset.</li>
+                    </ul>
+
+                    <div class="r-sub">MITRA 2.0 — Real-Time Multi-Speaker Transcription</div>
+                    <ul>
+                        <li>Launched a real-time multi-speaker transcription platform supporting <strong>11 languages</strong>, integrating Azure Speech SDK diarization and SpeechBrain ECAPA-TDNN voice enrollment.</li>
+                        <li>Connected Azure OpenAI for automated speaker name detection with a two-stage pipeline and built a Streamlit interface for live meeting summaries.</li>
+                    </ul>
+
+                    <div class="r-sub">Medical Bias Intelligence Dashboard</div>
+                    <ul>
+                        <li>Created a <strong>5-agent LLM-powered fairness audit platform</strong> with 11 automated analysis tools (chi-square bias, class imbalance, outlier detection), processing DICOM, NIfTI, and tabular medical datasets.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Technical Skills -->
+            <div class="r-section">
+                <div class="r-section-title">Technical Skills</div>
+                <div class="r-skills-grid">
+                    <span class="r-skill-label">Languages</span>
+                    <span class="r-skill-value">Python, Java, JavaScript, SQL | PyTorch, TensorFlow, HuggingFace Transformers, scikit-learn, YOLO</span>
+
+                    <span class="r-skill-label">AI / ML</span>
+                    <span class="r-skill-value">Vision-Language Models, LoRA/QLoRA, CNNs, RAG pipelines, LLMs, Medical Image Analysis, OpenCV</span>
+
+                    <span class="r-skill-label">Cloud &amp; Tools</span>
+                    <span class="r-skill-value">Azure (Speech SDK, OpenAI, AI Services), AWS, Git, Docker, Streamlit, SpeechBrain, BiomedCLIP</span>
+                </div>
+            </div>
+
+            <!-- Projects & Publications -->
+            <div class="r-section">
+                <div class="r-section-title">Projects &amp; Publications</div>
+
+                <div class="r-proj">
+                    <div class="r-proj-header">
+                        <h4>Pneumonia Detection Using Deep CNNs</h4>
+                        <span class="r-tech"><a href="https://doi.org/10.1109/ISED63599.2024.10956182" target="_blank">IEEE ISED 2024</a></span>
+                    </div>
+                    <ul>
+                        <li>Trained a hybrid ResNet152V2-CNN on 16,000+ labeled CT images from 7 datasets, reaching <strong>99.09% accuracy</strong> on pneumonia vs. COVID-19 vs. normal.</li>
+                        <li>Applied Grad-CAM heatmaps to validate model attention aligned with clinical lung-infection regions.</li>
+                    </ul>
+                </div>
+
+                <div class="r-proj">
+                    <div class="r-proj-header">
+                        <h4>AI Measurement Tool for Construction</h4>
+                        <span class="r-tech"><a href="https://doi.org/10.1109/ICICNIS64247.2024.10823244" target="_blank">IEEE ICICNIS 2024</a></span>
+                    </div>
+                    <ul>
+                        <li>Automated wall detection and cost estimation using YOLOv9 with camera calibration, cutting manual measurement time by <strong>85%</strong> and raising accuracy by <strong>35%</strong>.</li>
+                        <li>Added depth estimation for multi-perspective dimensioning from mobile devices.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Education -->
+            <div class="r-section">
+                <div class="r-section-title">Education</div>
+                <div class="r-edu">
+                    <div class="r-edu-row">
+                        <h3>Vellore Institute of Technology, AP</h3>
+                        <span class="r-date">Aug 2021 — Jul 2026</span>
+                    </div>
+                    <div class="r-edu-degree">Integrated MTech, Software Engineering</div>
+                    <div class="r-edu-detail">CGPA: 8.58/10</div>
+                </div>
+                <div class="r-edu" style="margin-top: 6px;">
+                    <div class="r-edu-row">
+                        <h3>Bashyam Education Institution</h3>
+                        <span class="r-date">2019 — 2021</span>
+                    </div>
+                    <div class="r-edu-detail">SSE (12th) — 89%</div>
+                </div>
+            </div>
+
+            <!-- Certifications & Leadership -->
+            <div class="r-section" style="margin-bottom: 0;">
+                <div class="r-section-title">Certifications &amp; Leadership</div>
+                <p class="r-certs">
+                    <strong>Microsoft Azure AI Fundamentals (AI-900)</strong> &nbsp;|&nbsp;
+                    <strong>Google Generative AI Developer Track</strong> &nbsp;|&nbsp;
+                    <strong>Full Stack Web Development</strong><br>
+                    <strong>President, Pennify Chapter, VIT-AP</strong> — Led 15-member committee; hosted 4 AI hackathons (200+ participants); secured faculty &amp; industry sponsorship.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

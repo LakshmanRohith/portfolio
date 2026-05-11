@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lakshman Rohith Sanagapalli — Data Scientist & Gen AI Engineer</title>
+    <meta name="description" content="Portfolio of Lakshman Rohith Sanagapalli — Data Scientist, Gen AI Engineer, ML/DL, NLP, Computer Vision, 2x IEEE Published, Philips Healthcare R&D.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">LR<span class="accent">.</span></a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#about">About</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#publications">Publications</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#education">Education</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="visualizations.html">CARE+ Research</a></li>
+                <li><a href="resume.html" class="nav-btn">Resume</a></li>
+                <li><a href="cv.html" class="nav-btn" style="border-color:#00cec9;color:#00cec9;">CV</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <canvas id="particleCanvas"></canvas>
+        <div class="hero-content">
+            <div class="hero-badge">Available for Full-Time Opportunities</div>
+            <h1 class="hero-title">
+                Hi, I'm <span class="gradient-text">Lakshman Rohith</span>
+            </h1>
+            <p class="hero-subtitle">Data Scientist &amp; Gen AI Engineer</p>
+            <p class="hero-description">
+                Building production-grade ML/AI systems at <strong>Philips Healthcare R&D</strong>. 
+                Specializing in Vision-Language Models, LLM Fine-tuning, Multi-Agent Systems, and MLOps. 
+                <strong>2&times; IEEE Published</strong> researcher.
+            </p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number" data-target="8">0</span>
+                    <span class="stat-label">Projects Built</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" data-target="2">0</span>
+                    <span class="stat-label">IEEE Papers</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" data-target="9">0</span>
+                    <span class="stat-label">Months at Philips</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" data-target="30">0</span><span class="stat-suffix">%</span>
+                    <span class="stat-label">Hallucination Reduced</span>
+                </div>
+            </div>
+            <div class="hero-cta">
+                <a href="#projects" class="btn btn-primary">View My Work</a>
+                <a href="resume.html" class="btn btn-outline">Download Resume</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse"></div>
+            <span>Scroll Down</span>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section" id="about">
+        <div class="container">
+            <h2 class="section-title">About <span class="gradient-text">Me</span></h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    <p class="about-lead">
+                        I'm a Data Scientist and Gen AI Engineer with hands-on experience building 
+                        production ML/AI systems at <strong>Philips Healthcare R&D</strong>, directly 
+                        impacting clinical safety and radiology workflows.
+                    </p>
+                    <ul style="list-style:none;padding:0;margin:16px 0;display:flex;flex-direction:column;gap:10px;">
+                        <li style="color:var(--text);font-size:0.95rem;">&#10003; Designed <strong>CARE+ loss framework</strong> — 8-component training objective, ~30% hallucination reduction</li>
+                        <li style="color:var(--text);font-size:0.95rem;">&#10003; Fine-tuned <strong>MedGemma-4B</strong> with 4-bit quantization + LoRA under strict compute constraints</li>
+                        <li style="color:var(--text);font-size:0.95rem;">&#10003; Built real-time <strong>multi-speaker transcription</strong> system with speaker diarization</li>
+                        <li style="color:var(--text);font-size:0.95rem;">&#10003; Designed <strong>multi-agent fairness audit</strong> platform for medical datasets</li>
+                        <li style="color:var(--text);font-size:0.95rem;">&#10003; Shipped <strong>AutoML pipelines</strong> &amp; <strong>predictive maintenance</strong> systems to production</li>
+                    </ul>
+                    <div class="about-highlights">
+                        <div class="highlight">
+                            <div class="highlight-icon">&#127891;</div>
+                            <div>
+                                <strong>VIT-AP University</strong>
+                                <span>M.Tech in Computer Software Engineering (2021–2026)</span>
+                            </div>
+                        </div>
+                        <div class="highlight">
+                            <div class="highlight-icon">&#127959;</div>
+                            <div>
+                                <strong>Philips Healthcare R&D</strong>
+                                <span>AI/ML Engineer — Bengaluru, India</span>
+                            </div>
+                        </div>
+                        <div class="highlight">
+                            <div class="highlight-icon">&#128218;</div>
+                            <div>
+                                <strong>2&times; IEEE Published</strong>
+                                <span>Deep CNNs for Pneumonia &amp; YOLOv9 for Construction</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-card">
+                    <div class="about-card-inner">
+                        <h3>What I Bring</h3>
+                        <ul class="about-list">
+                            <li>Production ML systems (not just notebooks)</li>
+                            <li>Medical AI &amp; Clinical Safety expertise</li>
+                            <li>Multi-agent system architecture</li>
+                            <li>LLM fine-tuning &amp; RAG pipelines</li>
+                            <li>End-to-end MLOps workflows</li>
+                            <li>Strong research fundamentals (IEEE)</li>
+                        </ul>
+                        <div class="about-seeking">
+                            <strong>Seeking:</strong> Data Scientist / Gen AI Engineer / ML Engineer roles
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section class="section section-alt" id="experience">
+        <div class="container">
+            <h2 class="section-title">Work <span class="gradient-text">Experience</span></h2>
+            <div class="timeline">
+
+                <!-- Philips -->
+                <div class="timeline-item" data-aos>
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <div>
+                                <h3>AI/ML Engineer Intern</h3>
+                                <span class="timeline-company">Philips &middot; Healthcare R&D</span>
+                            </div>
+                            <span class="timeline-date">Sep 2025 — Present</span>
+                        </div>
+                        <span class="timeline-location">Bengaluru, Karnataka &middot; Hybrid</span>
+                        
+                        <div class="exp-subsection">
+                            <h4>Medical Report Generation (CARE+ Framework)</h4>
+                            <ul>
+                                <li>Designed a novel <strong>CARE+ multi-component loss framework</strong> (8 losses including anti-hallucination, negation handling, severity-weighted classification) for training medical VLMs</li>
+                                <li>Fine-tuned <strong>MedGemma-4B</strong> using 4-bit quantization + LoRA on MIMIC-CXR and BraTS-GLI datasets</li>
+                                <li>Achieved <strong>~30% hallucination reduction</strong>, <strong>99% BLEU-4 improvement</strong>, <strong>+42% METEOR gain</strong></li>
+                                <li>Integrated <strong>RAG with BiomedCLIP</strong>, achieving 2&times; BLEU-4 on Indiana University dataset</li>
+                            </ul>
+                        </div>
+
+                        <div class="exp-subsection">
+                            <h4>Multi-Agent Clinical Safety (CARE+Agent)</h4>
+                            <ul>
+                                <li>Built a <strong>5-agent pipeline</strong> (Perception, SafetyGuard, EntityVerify, RAGConsistency, QualityJudge) for autonomous radiology report verification</li>
+                                <li>Implemented iterative PASS/REVISE/ESCALATE loop with human escalation for critical findings</li>
+                            </ul>
+                        </div>
+
+                        <div class="exp-subsection">
+                            <h4>MITRA 2.0 — Real-Time Speech AI</h4>
+                            <ul>
+                                <li>Built multi-speaker transcription with <strong>Azure Speech SDK</strong>, SpeechBrain ECAPA-TDNN embeddings, and GPT-4o</li>
+                                <li>Supports <strong>11 languages</strong>, live meeting capture, speaker enrollment, and automated summaries</li>
+                            </ul>
+                        </div>
+
+                        <div class="exp-subsection">
+                            <h4>Medical Bias Intelligence Dashboard</h4>
+                            <ul>
+                                <li>Developed <strong>5-agent fairness audit platform</strong> with 11 automated analysis tools for bias detection</li>
+                                <li>Integrated SHAP explainability, SMOTE/ADASYN rebalancing, and executive risk reporting</li>
+                            </ul>
+                        </div>
+
+                        <div class="tech-tags">
+                            <span>PyTorch</span><span>HuggingFace</span><span>LoRA</span><span>Azure OpenAI</span>
+                            <span>BiomedCLIP</span><span>Streamlit</span><span>SHAP</span><span>vLLM</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aspire PrimoGrad -->
+                <div class="timeline-item" data-aos>
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <div>
+                                <h3>Content Creator — Deep Learning & NLP</h3>
+                                <span class="timeline-company">Aspire PrimoGrad</span>
+                            </div>
+                            <span class="timeline-date">Sep 2024 — Nov 2024</span>
+                        </div>
+                        <span class="timeline-location">Tirupati, Andhra Pradesh &middot; Remote</span>
+                        <ul>
+                            <li>Designed and delivered <strong>40+ hour curricula</strong> for Deep Learning and NLP</li>
+                            <li>Created hands-on sessions covering Transformers, LSTMs, BERT, CNNs, and model deployment</li>
+                            <li>Mentored students through coding labs, doubt-clearing sessions, and project reviews</li>
+                            <li>Delivered using Jupyter Notebooks, TensorFlow, PyTorch, HuggingFace Transformers</li>
+                        </ul>
+                        <div class="tech-tags">
+                            <span>TensorFlow</span><span>PyTorch</span><span>HuggingFace</span>
+                            <span>NLP</span><span>Deep Learning</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Core Team Lead -->
+                <div class="timeline-item" data-aos>
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <div>
+                                <h3>Core Team Lead</h3>
+                                <span class="timeline-company">Vitopia — VIT-AP University</span>
+                            </div>
+                            <span class="timeline-date">Feb 2024 — Mar 2024</span>
+                        </div>
+                        <span class="timeline-location">Guntur, Andhra Pradesh &middot; On-site</span>
+                        <ul>
+                            <li>Coordinated with 30+ food vendors, ensuring hygiene compliance, stall setup, and payment operations</li>
+                            <li>Developed a rotational duty roster and real-time communication system</li>
+                            <li>Spearheaded budget planning, sponsorship talks, and logistics</li>
+                        </ul>
+                        <div class="tech-tags">
+                            <span>Leadership</span><span>Event Management</span><span>Logistics</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Coordinator -->
+                <div class="timeline-item" data-aos>
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <div>
+                                <h3>Event Coordinator</h3>
+                                <span class="timeline-company">NextGen Cloud Club — VIT-AP</span>
+                            </div>
+                            <span class="timeline-date">Dec 2022 — Jul 2023</span>
+                        </div>
+                        <span class="timeline-location">Guntur, Andhra Pradesh &middot; On-site</span>
+                        <ul>
+                            <li>Organized Cloud Computing workshops and beginner-level tech events</li>
+                            <li>Managed event communication, attendee coordination, and technical sessions</li>
+                        </ul>
+                        <div class="tech-tags">
+                            <span>Cloud Computing</span><span>Event Coordination</span><span>Communication</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="section" id="projects">
+        <div class="container">
+            <h2 class="section-title">Featured <span class="gradient-text">Projects</span></h2>
+            <p class="section-subtitle">Production-grade AI systems spanning Medical AI, NLP, Computer Vision, and MLOps</p>
+            
+            <div class="project-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="medical-ai">Medical AI</button>
+                <button class="filter-btn" data-filter="nlp">NLP / Gen AI</button>
+                <button class="filter-btn" data-filter="cv">Computer Vision</button>
+                <button class="filter-btn" data-filter="mlops">MLOps / Data Science</button>
+            </div>
+
+            <div class="projects-grid">
+
+                <!-- Project 1: CARE+ -->
+                <div class="project-card" data-category="medical-ai">
+                    <div class="project-card-header">
+                        <span class="project-icon">&#129657;</span>
+                        <a href="visualizations.html" class="project-link">Research Deep Dive &#8599;</a>
+                    </div>
+                    <h3>CARE+ Framework</h3>
+                    <p class="project-tagline">Philips Healthcare R&amp;D — Medical VLM for Radiology Report Generation</p>
+                    <p>Novel 8-component loss framework for medical vision-language models addressing hallucination, negation errors, and clinical safety in automated radiology reports.</p>
+                    <div class="project-metrics">
+                        <div class="metric"><span class="metric-value">~30%</span><span class="metric-label">Hallucination Reduced</span></div>
+                        <div class="metric"><span class="metric-value">99%</span><span class="metric-label">BLEU-4 Improvement</span></div>
+                        <div class="metric"><span class="metric-value">+42%</span><span class="metric-label">METEOR Gain</span></div>
+                    </div>
+                    <div class="tech-tags">
+                        <span>PyTorch</span><span>HuggingFace</span><span>LoRA</span><span>BiomedCLIP</span><span>vLLM</span>
+                    </div>
+                </div>
+
+                <!-- Project 2: AutoML -->
+                <div class="project-card" data-category="mlops">
+                    <div class="project-card-header">
+                        <span class="project-icon">&#9881;</span>
+                        <a href="https://github.com/LakshmanRohith/AutoML-Platform-for-Model-Selection-and-Hyperparameter-Tuning" target="_blank" rel="noopener noreferrer" class="project-link">GitHub &#8599;</a>
+                    </div>
+                    <h3>AutoML Platform</h3>
+                    <p class="project-tagline">Philips Healthcare R&amp;D — Model Selection &amp; Hyperparameter Tuning</p>
+                    <p>End-to-end no-code AutoML web application automating ML workflow — from data preprocessing, model selection (SVM, XGBoost, DNN), to hyperparameter tuning using Grid Search, Optuna, and Bayesian Optimization.</p>
+                    <div class="project-metrics">
+                        <div class="metric"><span class="metric-value">3</span><span class="metric-label">Tuning Methods</span></div>
+                        <div class="metric"><span class="metric-value">3+</span><span class="metric-label">Model Types</span></div>
+                    </div>
+                    <div class="tech-tags">
+                        <span>Streamlit</span><span>MLflow</span><span>Optuna</span><span>XGBoost</span><span>PyCaret</span>
+                    </div>
+                </div>
+
+                <!-- Project 3: MITRA 2.0 -->
+                <div class="project-card" data-category="nlp">
+                    <div class="project-card-header">
+                        <span class="project-icon">&#127908;</span>
+                        <span class="project-badge">Philips R&D</span>
+                    </div>
+                    <h3>MITRA 2.0</h3>
+                    <p class="project-tagline">Real-Time Multi-Speaker Transcription & Voice Intelligence</p>
+                    <p>Real-time multi-speaker meeting transcription system with speaker diarization, voice identification, and automated meeting summaries for enterprise healthcare settings.</p>
+                    <div class="project-metrics">
+                        <div class="metric"><span class="metric-value">11</span><span class="metric-label">Languages</span></div>
+                        <div class="metric"><span class="metric-value">Real-time</span><span class="metric-label">Transcription</span></div>
+                    </div>
+                    <div class="tech-tags">
+                        <span>Azure Speech SDK</span><span>GPT-4o</span><span>SpeechBrain</span><span>WebRTC</span><span>Streamlit</span>
+                    </div>
+                </div>
+
+                <!-- Project 4: Bias Dashboard -->
+                <div class="project-card" data-category="medical-ai">
+                    <div class="project-card-header">
+                        <span class="project-icon">&#9878;</span>
+                        <span class="project-badge">Philips R&D</span>
+                    </div>
+                    <h3>Medical Bias Intelligence Dashboard</h3>
+                    <p class="project-tagline">Multi-Agent Fairness Audit Platform</p>
+                    <p>AI-powered multi-agent fairness audit and data quality platform for medical datasets. 5-agent architecture with ReAct-style LLM tool-calling, supporting 10+ dataset formats including DICOM and NIfTI.</p>
+                    <div class="project-metrics">
+                        <div class="metric"><span class="metric-value">5</span><span class="metric-label">AI Agents</span></div>
+                        <div class="metric"><span class="metric-value">11</span><span class="metric-label">Analysis Tools</span></div>
+                        <div class="metric"><span class="metric-value">15</span><span class="metric-label">Chart Types</span></div>
+                    </div>
+                    <div class="tech-tags">
+                        <span>Azure OpenAI</span><span>SHAP</span><span>XGBoost</span><span>SMOTE</span><span>Streamlit</span>
+                    </div>
+                </div>
+
+                <!-- Project 5: Predictive Maintenance -->
+                <div class="project-card" data-category="mlops">
+                    <div class="project-card-header">
+                        <span class="project-icon">&#128295;</span>
+                    </div>
+                    <h3>Predictive Maintenance</h3>
+                    <p class="project-tagline">Industrial Failure Prediction System</p>
+                    <p>End-to-end predictive maintenance pipeline using Gradient Boosting and stacking ensembles on industrial sensor data, estimating 83.6% downtime reduction with $11.4M net savings per batch.</p>
+                    <div class="project-metrics">
+                        <div class="metric"><span class="metric-value">98.4%</span><span class="metric-label">AUC-ROC</span></div>
+                        <div class="metric"><span class="metric-value">83%</span><span class="metric-label">Recall</span></div>
+                        <div class="metric"><span class="metric-value">$11.4M</span><span class="metric-label">Est. Savings</span></div>
+                    </div>
+                    <div class="tech-tags">
+                        <span>scikit-learn</span><span>XGBoost</span><span>Pandas</span><span>Matplotlib</span><span>Seaborn</span>
+                    </div>
+                </div>
+
+                <!-- Project 6: YOLOv9 Construction -->
+                <div class="project-card" data-category="cv">
+                    <div class="project-card-header">
+                        <span class="project-icon">&#128207;</span>
+                        <a href="https://github.com/LakshmanRohith/Optimizing-Cost-Estimation-Using-YOLOv9" target="_blank" rel="noopener noreferrer" class="project-link">GitHub &#8599;</a>
+                    </div>
+                    <h3>AI Measurement Tool</h3>
+                    <p class="project-tagline">Construction Cost Estimation with YOLOv9</p>
+                    <p>Real-time area estimation system with YOLOv9, reducing manual measuring time by 85%. Improved pixel-to-meter accuracy by 35% through custom calibration scripts with depth estimation logic.</p>
+                    <div class="project-metrics">
+                        <div class="metric"><span class="metric-value">85%</span><span class="metric-label">Time Reduced</span></div>
+                        <div class="metric"><span class="metric-value">35%</span><span class="metric-label">Accuracy Improved</span></div>
+                    </div>
+                    <div class="tech-tags">
+                        <span>YOLOv9</span><span>OpenCV</span><span>Python</span><span>Computer Vision</span>
+                    </div>
+                </div>
+
+                <!-- Project 7: Vihara Agent -->
+                <div class="project-card" data-category="nlp">
+                    <div class="project-card-header">
+                        <span class="project-icon">&#9992;</span>
+                        <a href="https://github.com/LakshmanRohith/AI-TRIP-PLANNER" target="_blank" rel="noopener noreferrer" class="project-link">GitHub &#8599;</a>
+                    </div>
+                    <h3>Vihara Agent</h3>
+                    <p class="project-tagline">AI Trip Planner</p>
+                    <p>Conversational travel planner using GPT-based NLP for custom itineraries. Integrated with Google Maps for geolocation-aware route optimization, reducing manual planning time by 75%.</p>
+                    <div class="project-metrics">
+                        <div class="metric"><span class="metric-value">75%</span><span class="metric-label">Planning Time Reduced</span></div>
+                        <div class="metric"><span class="metric-value">99.8%</span><span class="metric-label">Uptime</span></div>
+                    </div>
+                    <div class="tech-tags">
+                        <span>React.js</span><span>Node.js</span><span>GPT</span><span>Google Maps API</span>
+                    </div>
+                </div>
+
+                <!-- Project 8: Pneumonia -->
+                <div class="project-card" data-category="cv medical-ai">
+                    <div class="project-card-header">
+                        <span class="project-icon">&#129691;</span>
+                        <a href="https://github.com/LakshmanRohith/PNEUMONIA" target="_blank" rel="noopener noreferrer" class="project-link">GitHub &#8599;</a>
+                    </div>
+                    <h3>Pneumonia Detection</h3>
+                    <p class="project-tagline">Deep CNN for Medical Imaging — IEEE Published</p>
+                    <p>Deep CNN-based approach using U-Net segmentation, ResNet152V2, VGG19, and Grad-CAM for pneumonia and COVID-19 detection from CT scans. Achieved 99.09% accuracy. Published at IEEE ISED 2024.</p>
+                    <div class="project-metrics">
+                        <div class="metric"><span class="metric-value">99.09%</span><span class="metric-label">Accuracy</span></div>
+                        <div class="metric"><span class="metric-value">IEEE</span><span class="metric-label">Published</span></div>
+                    </div>
+                    <div class="tech-tags">
+                        <span>ResNet152V2</span><span>VGG19</span><span>U-Net</span><span>Grad-CAM</span><span>TensorFlow</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Publications Section -->
+    <section class="section section-alt" id="publications">
+        <div class="container">
+            <h2 class="section-title">IEEE <span class="gradient-text">Publications</span></h2>
+            <div class="publications-grid">
+                <div class="pub-card" data-aos>
+                    <div class="pub-icon">&#128196;</div>
+                    <div class="pub-info">
+                        <h3>Pneumonia Detection Using Deep CNN Algorithms</h3>
+                        <p class="pub-venue">IEEE &middot; Published April 15, 2025</p>
+                        <p>Proposes a Deep CNN-based approach for pneumonia detection using medical X-rays, achieving 99.09% accuracy and leveraging Grad-CAM for interpretability. Presented at IEEE ISED 2024.</p>
+                        <a href="https://ieeexplore.ieee.org/document/10956182" target="_blank" rel="noopener noreferrer" class="pub-link">View on IEEE Xplore &#8599;</a>
+                    </div>
+                </div>
+                <div class="pub-card" data-aos>
+                    <div class="pub-icon">&#128196;</div>
+                    <div class="pub-info">
+                        <h3>Optimizing Cost Estimation Using YOLOv9</h3>
+                        <p class="pub-venue">IEEE &middot; Published January 10, 2025</p>
+                        <p>Introduces a YOLOv9-based real-time object measurement system for construction. By integrating camera calibration and pixel-to-meter conversion, it reduces manual estimation by over 85%.</p>
+                        <a href="https://ieeexplore.ieee.org/document/10823244" target="_blank" rel="noopener noreferrer" class="pub-link">View on IEEE Xplore &#8599;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="section" id="skills">
+        <div class="container">
+            <h2 class="section-title">Technical <span class="gradient-text">Skills</span></h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>&#129302; ML / Deep Learning</h3>
+                    <div class="skill-tags">
+                        <span>PyTorch</span><span>TensorFlow</span><span>scikit-learn</span>
+                        <span>XGBoost</span><span>Keras</span><span>PyCaret</span>
+                        <span>SHAP</span><span>Optuna</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>&#128172; NLP / Gen AI</h3>
+                    <div class="skill-tags">
+                        <span>HuggingFace Transformers</span><span>LangChain</span>
+                        <span>LoRA / QLoRA</span><span>PEFT</span><span>vLLM</span>
+                        <span>RAG</span><span>Prompt Engineering</span><span>BitsAndBytes</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>&#128064; Computer Vision</h3>
+                    <div class="skill-tags">
+                        <span>OpenCV</span><span>YOLOv9</span><span>U-Net</span>
+                        <span>ResNet</span><span>VGG</span><span>Grad-CAM</span>
+                        <span>BiomedCLIP</span><span>SigLIP</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>&#9729; Cloud / MLOps</h3>
+                    <div class="skill-tags">
+                        <span>Azure OpenAI</span><span>Azure Cognitive Services</span>
+                        <span>MLflow</span><span>Docker</span><span>Git</span>
+                        <span>Streamlit</span><span>WebRTC</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>&#128202; Data Science</h3>
+                    <div class="skill-tags">
+                        <span>Python</span><span>Pandas</span><span>NumPy</span>
+                        <span>Matplotlib</span><span>Seaborn</span><span>SQL</span>
+                        <span>EDA</span><span>Feature Engineering</span><span>Statistical Analysis</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>&#127760; Web / Full Stack</h3>
+                    <div class="skill-tags">
+                        <span>React.js</span><span>Node.js</span><span>JavaScript</span>
+                        <span>TypeScript</span><span>HTML/CSS</span><span>REST APIs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section class="section section-alt" id="education">
+        <div class="container">
+            <h2 class="section-title"><span class="gradient-text">Education</span> & Certifications</h2>
+            <div class="edu-grid">
+                <div class="edu-card" data-aos>
+                    <div class="edu-icon">&#127891;</div>
+                    <div class="edu-info">
+                        <h3>VIT-AP University</h3>
+                        <p class="edu-degree">Master's Degree — Computer Software Engineering</p>
+                        <p class="edu-date">August 2021 — July 2026</p>
+                        <p>Integrated M.Tech in Software Engineering. Developed several web and AI projects. Active in cloud computing clubs and tech fest organizing.</p>
+                    </div>
+                </div>
+                <div class="edu-card" data-aos>
+                    <div class="edu-icon">&#128220;</div>
+                    <div class="edu-info">
+                        <h3>Certifications</h3>
+                        <ul class="cert-list">
+                            <li><strong>0-100 Full Stack Web Development</strong> — 100xDevs (Apr 2025)</li>
+                            <li><strong>E-Commerce Certificate</strong> — Unstop (Aug 2024)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section" id="contact">
+        <div class="container">
+            <h2 class="section-title">Get In <span class="gradient-text">Touch</span></h2>
+            <p class="section-subtitle">Open to Data Scientist, Gen AI Engineer, and ML Engineer opportunities</p>
+            <div class="contact-grid">
+                <a href="https://www.linkedin.com/in/lakshman-rohith-sanagapalli" target="_blank" rel="noopener noreferrer" class="contact-card">
+                    <div class="contact-icon">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    </div>
+                    <h3>LinkedIn</h3>
+                    <p>Connect with me</p>
+                </a>
+                <a href="https://github.com/LakshmanRohith" target="_blank" rel="noopener noreferrer" class="contact-card">
+                    <div class="contact-icon">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                    </div>
+                    <h3>GitHub</h3>
+                    <p>View my code</p>
+                </a>
+                <a href="mailto:lakshmanrohith.sanagapalli@gmail.com" class="contact-card">
+                    <div class="contact-icon">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 010 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
+                    </div>
+                    <h3>Email</h3>
+                    <p>Send me a message</p>
+                </a>
+                <a href="resume.html" class="contact-card">
+                    <div class="contact-icon">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/></svg>
+                    </div>
+                    <h3>Resume</h3>
+                    <p>View &amp; Download</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Lakshman Rohith Sanagapalli. Built with passion &amp; code.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
