@@ -1,1 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CARE+ Framework — Research Visualizations | Lakshman Rohith</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- ZERO external JS dependencies — all charts are pure CSS -->
+    <style>
+        :root {
+            --bg: #0a0a0f; --bg2: #111118; --card: #16161f; --card-hover: #1c1c28;
+            --text: #e8e8ed; --muted: #9898a6; --dim: #6b6b7b;
+            --accent: #6c5ce7; --accent2: #00cec9; --accent3: #fd79a8;
+            --border: #1e1e2e; --font: 'Inter', sans-serif; --mono: 'JetBrains Mono', monospace;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--font); background: var(--bg); color: var(--text); line-height:1.7; -webkit-font-smoothing: antialiased; }
+        a { color: var(--accent2); text-decoration: none; }
+
+        .top-bar { background: var(--bg2); border-bottom:1px solid var(--border); padding:14px 24px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:100; backdrop-filter: blur(20px); }
+        .top-bar a { color: var(--muted); font-size:0.88rem; font-weight:500; }
+        .top-bar a:hover { color: var(--text); }
+        .top-bar .page-title { font-size:1rem; font-weight:700; }
+        .top-bar .page-title span { background: linear-gradient(135deg, #6c5ce7, #00cec9); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+
+        .container { max-width:1200px; margin:0 auto; padding:0 24px; }
+
+        .viz-hero { padding:60px 0 40px; text-align:center; }
+        .viz-hero h1 { font-size:clamp(1.8rem,4vw,2.8rem); font-weight:900; letter-spacing:-1px; margin-bottom:12px; }
+        .viz-hero h1 span { background: linear-gradient(135deg, #6c5ce7, #00cec9); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .viz-hero p { color:var(--muted); max-width:700px; margin:0 auto; font-size:0.95rem; }
+
+        .section-nav { display:flex; justify-content:center; gap:8px; margin-bottom:48px; flex-wrap:wrap; }
+        .nav-pill { padding:8px 18px; border:1px solid var(--border); border-radius:8px; background:transparent; color:var(--muted); font-size:0.82rem; font-weight:500; cursor:pointer; transition:0.3s; font-family:var(--font); text-decoration:none; }
+        .nav-pill:hover, .nav-pill.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+        .viz-section { padding:48px 0 60px; }
+        .viz-section:nth-child(even) { background: var(--bg2); }
+        .section-title { font-size:1.6rem; font-weight:800; text-align:center; margin-bottom:8px; letter-spacing:-0.5px; }
+        .section-title span { background: linear-gradient(135deg, #6c5ce7, #00cec9); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .section-desc { text-align:center; color:var(--muted); max-width:700px; margin:0 auto 36px; font-size:0.9rem; }
+
+        .chart-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(520px, 1fr)); gap:24px; }
+        .chart-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:24px; transition:0.3s; }
+        .chart-card:hover { border-color:rgba(108,92,231,0.3); box-shadow:0 8px 40px rgba(108,92,231,0.12); }
+        .chart-card h3 { font-size:1rem; font-weight:700; margin-bottom:4px; }
+        .chart-card .chart-subtitle { font-size:0.78rem; color:var(--accent2); margin-bottom:16px; font-weight:500; }
+        .chart-card-full { grid-column: 1 / -1; }
+
+        /* ===== PURE CSS BAR CHART ===== */
+        .css-chart { display:flex; align-items:stretch; gap:12px; height:220px; padding:16px 0 0; border-bottom:2px solid var(--border); margin-bottom:8px; }
+        .css-chart-tall { height:280px; }
+        .css-bar-group { display:flex; align-items:flex-end; gap:3px; flex:1; min-width:0; position:relative; padding-bottom:24px; }
+        .css-bar { flex:1; min-width:3px; max-width:18px; border-radius:3px 3px 0 0; transition: height 0.6s ease; position:relative; cursor:default; }
+        .css-bar:hover { opacity:0.85; filter:brightness(1.2); }
+        .css-bar .bar-tip { position:absolute; top:-18px; left:50%; transform:translateX(-50%); font-size:0.6rem; font-family:var(--mono); color:var(--muted); white-space:nowrap; display:none; }
+        .css-bar:hover .bar-tip { display:block; }
+        .css-bar-group .bar-label { position:absolute; bottom:0; left:50%; transform:translateX(-50%); font-size:0.68rem; color:var(--dim); font-family:var(--mono); white-space:nowrap; }
+
+        .css-chart-legend { display:flex; gap:16px; flex-wrap:wrap; padding:12px 0 0; justify-content:center; }
+        .css-legend-item { display:flex; align-items:center; gap:5px; font-size:0.75rem; color:var(--muted); }
+        .css-legend-dot { width:10px; height:10px; border-radius:2px; }
+
+        /* Horizontal bar chart */
+        .css-hbar { margin:8px 0; }
+        .css-hbar-row { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+        .css-hbar-label { width:90px; text-align:right; font-size:0.78rem; color:var(--muted); font-family:var(--mono); flex-shrink:0; }
+        .css-hbar-track { flex:1; height:24px; background:var(--bg); border-radius:6px; overflow:hidden; position:relative; }
+        .css-hbar-fill { height:100%; border-radius:6px; display:flex; align-items:center; justify-content:flex-end; padding-right:8px; font-size:0.72rem; font-family:var(--mono); color:#fff; font-weight:600; transition: width 0.8s ease; }
+
+        /* Donut chart (pure CSS conic-gradient) */
+        .css-donut { width:200px; height:200px; border-radius:50%; margin:16px auto; position:relative; }
+        .css-donut-hole { position:absolute; width:120px; height:120px; background:var(--card); border-radius:50%; top:50%; left:50%; transform:translate(-50%,-50%); display:flex; align-items:center; justify-content:center; font-size:0.8rem; color:var(--muted); text-align:center; font-family:var(--mono); }
+
+        /* Metrics banner */
+        .metrics-banner { display:grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap:16px; margin-bottom:40px; }
+        .metric-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; text-align:center; transition:0.3s; }
+        .metric-card:hover { border-color:rgba(108,92,231,0.3); transform:translateY(-2px); }
+        .metric-card .metric-val { font-size:1.8rem; font-weight:800; font-family:var(--mono); color:var(--accent); }
+        .metric-card .metric-label { font-size:0.72rem; color:var(--dim); text-transform:uppercase; letter-spacing:1px; font-weight:500; margin-top:4px; }
+        .metric-card .metric-sub { font-size:0.78rem; color:var(--muted); margin-top:4px; }
+
+        /* Tables */
+        .data-table { width:100%; border-collapse:collapse; margin-top:16px; font-size:0.85rem; }
+        .data-table th { background:rgba(108,92,231,0.1); color:var(--accent); font-weight:600; padding:10px 12px; text-align:center; border-bottom:2px solid var(--border); font-family:var(--mono); }
+        .data-table td { padding:8px 12px; text-align:center; border-bottom:1px solid var(--border); color:var(--muted); font-family:var(--mono); }
+        .data-table tr:hover td { background:rgba(108,92,231,0.04); }
+        .data-table .best { color:var(--accent2); font-weight:700; }
+        .data-table .row-label { text-align:left; color:var(--text); font-weight:600; font-family:var(--font); }
+
+        /* Architecture nodes */
+        .arch-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap:12px; margin-top:24px; }
+        .arch-node { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; text-align:center; transition:0.3s; }
+        .arch-node:hover { border-color:var(--accent); transform:translateY(-3px); box-shadow:0 6px 30px rgba(108,92,231,0.15); }
+        .arch-node .node-icon { font-size:1.8rem; margin-bottom:8px; }
+        .arch-node .node-name { font-size:0.78rem; font-weight:700; color:var(--text); margin-bottom:4px; }
+        .arch-node .node-lambda { font-size:0.72rem; color:var(--accent); font-family:var(--mono); }
+        .arch-node .node-loss { font-size:0.7rem; color:var(--muted); }
+
+        /* Image gallery */
+        .img-gallery { display:grid; grid-template-columns: repeat(auto-fill, minmax(500px, 1fr)); gap:24px; margin-top:24px; }
+        .img-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:20px; transition:0.3s; }
+        .img-card:hover { border-color:rgba(108,92,231,0.3); box-shadow:0 8px 40px rgba(108,92,231,0.12); }
+        .img-card h4 { font-size:0.95rem; font-weight:700; margin-bottom:4px; }
+        .img-card .img-subtitle { font-size:0.78rem; color:var(--accent2); margin-bottom:12px; font-weight:500; }
+        .img-card img { width:100%; border-radius:8px; border:1px solid var(--border); cursor:pointer; }
+        .img-card-full { grid-column: 1 / -1; }
+        .comparison-pair { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+        .comparison-pair img { width:100%; border-radius:8px; border:1px solid var(--border); }
+        .comparison-pair .label { font-size:0.75rem; color:var(--dim); text-align:center; margin-top:4px; text-transform:uppercase; letter-spacing:1px; }
+        .scroll-img-container { max-height:600px; overflow:auto; border:1px solid var(--border); border-radius:8px; margin-top:12px; }
+        .scroll-img-container img { width:100%; min-width:800px; display:block; }
+
+        /* ===== PATIENT CAROUSEL ===== */
+        .carousel { position:relative; overflow:hidden; border-radius:16px; background:var(--card); border:1px solid var(--border); }
+        .carousel-track { display:flex; transition: transform 0.6s cubic-bezier(0.4,0,0.2,1); }
+        .carousel-slide { min-width:100%; padding:32px; box-sizing:border-box; }
+        .carousel-slide h4 { font-size:1.15rem; font-weight:800; margin-bottom:4px; }
+        .carousel-slide .img-subtitle { font-size:0.82rem; color:var(--accent2); margin-bottom:16px; font-weight:500; }
+        .carousel-slide .slide-content { display:grid; grid-template-columns:1fr 3fr; gap:24px; align-items:start; }
+        .carousel-slide .slide-content img { width:100%; border-radius:10px; border:1px solid var(--border); cursor:pointer; }
+        .carousel-slide .slide-content .img-label { font-size:0.72rem; color:var(--dim); text-align:center; margin-top:6px; text-transform:uppercase; letter-spacing:1px; }
+        .carousel-slide .slide-brain { display:grid; grid-template-columns:1fr 1fr 4fr; gap:16px; align-items:start; }
+        .carousel-slide .slide-brain img { width:100%; border-radius:10px; border:1px solid var(--border); cursor:pointer; }
+        .carousel-slide .slide-brain .img-label { font-size:0.72rem; color:var(--dim); text-align:center; margin-top:6px; text-transform:uppercase; letter-spacing:1px; }
+        .carousel-controls { display:flex; justify-content:center; align-items:center; gap:16px; padding:16px 0 24px; }
+        .carousel-dot { width:10px; height:10px; border-radius:50%; background:var(--dim); cursor:pointer; transition:0.3s; border:none; }
+        .carousel-dot.active { background:var(--accent); width:28px; border-radius:5px; }
+        .carousel-btn { background:rgba(108,92,231,0.15); border:1px solid var(--border); color:var(--text); width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; transition:0.3s; }
+        .carousel-btn:hover { background:var(--accent); border-color:var(--accent); }
+        .carousel-counter { font-size:0.78rem; color:var(--muted); font-family:var(--mono); }
+        .carousel-progress { height:3px; background:var(--border); border-radius:2px; overflow:hidden; margin:0 32px; }
+        .carousel-progress-bar { height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:2px; transition: width 0.3s ease; }
+
+        /* Image modal */
+        .img-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:500; cursor:zoom-out; overflow:auto; padding:40px; }
+        .img-modal img { max-width:95%; margin:0 auto; display:block; }
+        .img-modal-close { position:fixed; top:16px; right:24px; color:#fff; font-size:2rem; cursor:pointer; z-index:501; background:rgba(0,0,0,0.6); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+
+        /* ===== COLOR-CODED REPORT COMPARISON ===== */
+        .report-section { margin-top:40px; }
+        .report-section h3 { font-size:1.2rem; font-weight:800; text-align:center; margin-bottom:8px; }
+        .report-legend { display:flex; justify-content:center; gap:24px; margin-bottom:28px; flex-wrap:wrap; }
+        .legend-item { display:flex; align-items:center; gap:6px; font-size:0.85rem; color:var(--muted); }
+        .legend-dot { width:14px; height:14px; border-radius:3px; }
+        .legend-dot.matched { background:#2ecc71; }
+        .legend-dot.hallucinated { background:#e74c3c; }
+        .legend-dot.missing { background:#f39c12; }
+        .report-cards-container { display:flex; flex-direction:column; gap:32px; }
+        .report-case { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:32px; transition:0.3s; }
+        .report-case:hover { border-color:rgba(108,92,231,0.3); box-shadow:0 8px 40px rgba(108,92,231,0.12); }
+        .report-case-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+        .report-case-header h4 { font-size:1.15rem; font-weight:800; }
+        .sim-score { font-size:1.5rem; font-weight:900; font-family:var(--mono); padding:6px 18px; border-radius:8px; }
+        .sim-100 { background:rgba(46,204,113,0.15); color:#2ecc71; }
+        .report-columns { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:16px; }
+        .report-col { background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:24px; overflow-y:auto; max-height:450px; }
+        .report-col-label { display:flex; align-items:center; gap:8px; margin-bottom:14px; }
+        .report-col-label .col-badge { padding:4px 14px; border-radius:6px; font-size:0.82rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+        .col-badge-ref { background:rgba(108,92,231,0.2); color:var(--accent); }
+        .col-badge-gen { background:rgba(0,206,201,0.2); color:var(--accent2); }
+        .report-text { font-size:1.05rem; line-height:2; color:var(--text); }
+        .finding-matched { background:rgba(46,204,113,0.2); color:#2ecc71; border-radius:3px; padding:2px 5px; border-bottom:2px solid #2ecc71; }
+        .finding-hallucinated { background:rgba(231,76,60,0.2); color:#e74c3c; border-radius:3px; padding:2px 5px; border-bottom:2px solid #e74c3c; }
+        .finding-missing { background:rgba(243,156,18,0.2); color:#f39c12; border-radius:3px; padding:2px 5px; border-bottom:2px solid #f39c12; }
+        .findings-summary { display:flex; gap:16px; margin-top:20px; flex-wrap:wrap; }
+        .finding-stat { font-size:0.88rem; font-family:var(--mono); padding:6px 16px; border-radius:6px; font-weight:600; }
+        .stat-matched { background:rgba(46,204,113,0.1); color:#2ecc71; }
+        .stat-hall { background:rgba(231,76,60,0.1); color:#e74c3c; }
+        .stat-miss { background:rgba(243,156,18,0.1); color:#f39c12; }
+
+        .footer { padding:32px 0; border-top:1px solid var(--border); text-align:center; }
+        .footer p { color:var(--dim); font-size:0.82rem; }
+
+        @media(max-width:768px) {
+            .chart-grid { grid-template-columns:1fr; }
+            .report-columns { grid-template-columns:1fr; }
+            .metrics-banner { grid-template-columns: repeat(2,1fr); }
+            .arch-grid { grid-template-columns: repeat(2,1fr); }
+            .img-gallery { grid-template-columns:1fr; }
+            .comparison-pair { grid-template-columns:1fr; }
+            .css-chart { height:160px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="img-modal" id="imgModal" onclick="this.style.display='none'">
+    <div class="img-modal-close" onclick="document.getElementById('imgModal').style.display='none'">&times;</div>
+    <img id="imgModalSrc" src="" alt="Full resolution">
+</div>
+
+<div class="top-bar">
+    <a href="index.html">&larr; Back to Portfolio</a>
+    <div class="page-title">CARE+ <span>Research Visualizations</span></div>
+</div>
+
+<div class="viz-hero">
+    <div class="container">
+        <h1>CARE+ Framework <span>Deep Dive</span></h1>
+        <p>Interactive visualizations of the CARE+ multi-component loss framework for medical vision-language models — ablation studies, metrics comparison, hyperparameter sensitivity, and generated report quality analysis across 6 medical imaging datasets.</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="section-nav">
+        <a href="#overview" class="nav-pill active">Overview</a>
+        <a href="#sota" class="nav-pill">vs SOTA</a>
+        <a href="#ablation" class="nav-pill">Ablation Study</a>
+        <a href="#unfreezing" class="nav-pill">Unfreezing Strategy</a>
+        <a href="#comparisons" class="nav-pill">Visual Comparisons</a>
+        <a href="#metrics-tables" class="nav-pill">Full Metrics</a>
+        <a href="#reports" class="nav-pill">Report Quality</a>
+    </div>
+</div>
+
+<!-- ====== SECTION 1: Overview ====== -->
+<div class="viz-section" id="overview">
+    <div class="container">
+        <h2 class="section-title">Key <span>Results</span> at a Glance</h2>
+        <p class="section-desc">Best CARE+ (Full) configuration vs. Cross-Entropy Baseline across all 6 datasets</p>
+
+        <div class="metrics-banner">
+            <div class="metric-card"><div class="metric-val">~30%</div><div class="metric-label">Hallucination Reduced</div><div class="metric-sub">Contrastive Anti-Hallucination</div></div>
+            <div class="metric-card"><div class="metric-val">99%</div><div class="metric-label">BLEU-4 Improvement</div><div class="metric-sub">MIMIC-CXR w/ RAG</div></div>
+            <div class="metric-card"><div class="metric-val">+42%</div><div class="metric-label">METEOR Gain</div><div class="metric-sub">MIMIC-CXR Dataset</div></div>
+            <div class="metric-card"><div class="metric-val">6</div><div class="metric-label">Datasets</div><div class="metric-sub">Brain MRI + Chest X-ray</div></div>
+            <div class="metric-card"><div class="metric-val">8</div><div class="metric-label">Loss Components</div><div class="metric-sub">CARE+ Framework</div></div>
+            <div class="metric-card"><div class="metric-val">82%</div><div class="metric-label">Max Relative Gain</div><div class="metric-sub">BLEU-4 on BraTS-MET</div></div>
+        </div>
+
+        <div class="chart-card chart-card-full">
+            <h3>Best Scores Across All 6 Datasets (CARE+ Full)</h3>
+            <div class="chart-subtitle">BLEU-1 through BLEU-4, ROUGE-1/2/L, METEOR — Higher is better</div>
+            <div class="css-chart css-chart-tall">
+                <!-- B-1 -->
+                <div class="css-bar-group">
+                    <div class="css-bar" style="height:68.5%;background:#E63946cc" title="BraTS-GLI: 41.10"><span class="bar-tip">41.1</span></div>
+                    <div class="css-bar" style="height:61.9%;background:#457B9Dcc" title="BraTS-MET: 37.14"><span class="bar-tip">37.1</span></div>
+                    <div class="css-bar" style="height:60.5%;background:#2A9D8Fcc" title="BraTS-MEN: 36.27"><span class="bar-tip">36.3</span></div>
+                    <div class="css-bar" style="height:67.4%;background:#E9C46Acc" title="MR-RATE: 40.45"><span class="bar-tip">40.5</span></div>
+                    <div class="css-bar" style="height:62.8%;background:#6A0572cc" title="MIMIC: 37.65"><span class="bar-tip">37.7</span></div>
+                    <div class="css-bar" style="height:60.6%;background:#FF6B35cc" title="IU: 36.38"><span class="bar-tip">36.4</span></div>
+                    <span class="bar-label">B-1</span>
+                </div>
+                <!-- B-2 -->
+                <div class="css-bar-group">
+                    <div class="css-bar" style="height:50.3%;background:#E63946cc"><span class="bar-tip">30.2</span></div>
+                    <div class="css-bar" style="height:43.0%;background:#457B9Dcc"><span class="bar-tip">25.8</span></div>
+                    <div class="css-bar" style="height:41.9%;background:#2A9D8Fcc"><span class="bar-tip">25.1</span></div>
+                    <div class="css-bar" style="height:52.0%;background:#E9C46Acc"><span class="bar-tip">31.2</span></div>
+                    <div class="css-bar" style="height:39.9%;background:#6A0572cc"><span class="bar-tip">23.9</span></div>
+                    <div class="css-bar" style="height:40.0%;background:#FF6B35cc"><span class="bar-tip">24.0</span></div>
+                    <span class="bar-label">B-2</span>
+                </div>
+                <!-- B-3 -->
+                <div class="css-bar-group">
+                    <div class="css-bar" style="height:39.3%;background:#E63946cc"><span class="bar-tip">23.6</span></div>
+                    <div class="css-bar" style="height:31.0%;background:#457B9Dcc"><span class="bar-tip">18.6</span></div>
+                    <div class="css-bar" style="height:30.1%;background:#2A9D8Fcc"><span class="bar-tip">18.1</span></div>
+                    <div class="css-bar" style="height:43.0%;background:#E9C46Acc"><span class="bar-tip">25.8</span></div>
+                    <div class="css-bar" style="height:26.2%;background:#6A0572cc"><span class="bar-tip">15.7</span></div>
+                    <div class="css-bar" style="height:26.9%;background:#FF6B35cc"><span class="bar-tip">16.2</span></div>
+                    <span class="bar-label">B-3</span>
+                </div>
+                <!-- B-4 -->
+                <div class="css-bar-group">
+                    <div class="css-bar" style="height:29.0%;background:#E63946cc"><span class="bar-tip">17.4</span></div>
+                    <div class="css-bar" style="height:21.7%;background:#457B9Dcc"><span class="bar-tip">13.0</span></div>
+                    <div class="css-bar" style="height:21.1%;background:#2A9D8Fcc"><span class="bar-tip">12.7</span></div>
+                    <div class="css-bar" style="height:36.5%;background:#E9C46Acc"><span class="bar-tip">21.9</span></div>
+                    <div class="css-bar" style="height:17.3%;background:#6A0572cc"><span class="bar-tip">10.4</span></div>
+                    <div class="css-bar" style="height:18.4%;background:#FF6B35cc"><span class="bar-tip">11.1</span></div>
+                    <span class="bar-label">B-4</span>
+                </div>
+                <!-- R-1 -->
+                <div class="css-bar-group">
+                    <div class="css-bar" style="height:92.4%;background:#E63946cc"><span class="bar-tip">55.5</span></div>
+                    <div class="css-bar" style="height:77.9%;background:#457B9Dcc"><span class="bar-tip">46.8</span></div>
+                    <div class="css-bar" style="height:76.1%;background:#2A9D8Fcc"><span class="bar-tip">45.7</span></div>
+                    <div class="css-bar" style="height:82.6%;background:#E9C46Acc"><span class="bar-tip">49.5</span></div>
+                    <div class="css-bar" style="height:68.6%;background:#6A0572cc"><span class="bar-tip">41.2</span></div>
+                    <div class="css-bar" style="height:69.7%;background:#FF6B35cc"><span class="bar-tip">41.8</span></div>
+                    <span class="bar-label">R-1</span>
+                </div>
+                <!-- R-2 -->
+                <div class="css-bar-group">
+                    <div class="css-bar" style="height:54.0%;background:#E63946cc"><span class="bar-tip">32.4</span></div>
+                    <div class="css-bar" style="height:40.2%;background:#457B9Dcc"><span class="bar-tip">24.1</span></div>
+                    <div class="css-bar" style="height:39.1%;background:#2A9D8Fcc"><span class="bar-tip">23.5</span></div>
+                    <div class="css-bar" style="height:49.9%;background:#E9C46Acc"><span class="bar-tip">29.9</span></div>
+                    <div class="css-bar" style="height:26.0%;background:#6A0572cc"><span class="bar-tip">15.6</span></div>
+                    <div class="css-bar" style="height:28.9%;background:#FF6B35cc"><span class="bar-tip">17.4</span></div>
+                    <span class="bar-label">R-2</span>
+                </div>
+                <!-- R-L -->
+                <div class="css-bar-group">
+                    <div class="css-bar" style="height:78.1%;background:#E63946cc"><span class="bar-tip">46.9</span></div>
+                    <div class="css-bar" style="height:64.3%;background:#457B9Dcc"><span class="bar-tip">38.6</span></div>
+                    <div class="css-bar" style="height:62.8%;background:#2A9D8Fcc"><span class="bar-tip">37.7</span></div>
+                    <div class="css-bar" style="height:64.6%;background:#E9C46Acc"><span class="bar-tip">38.8</span></div>
+                    <div class="css-bar" style="height:45.6%;background:#6A0572cc"><span class="bar-tip">27.4</span></div>
+                    <div class="css-bar" style="height:52.8%;background:#FF6B35cc"><span class="bar-tip">31.7</span></div>
+                    <span class="bar-label">R-L</span>
+                </div>
+                <!-- METEOR -->
+                <div class="css-bar-group">
+                    <div class="css-bar" style="height:79.6%;background:#E63946cc"><span class="bar-tip">47.8</span></div>
+                    <div class="css-bar" style="height:57.0%;background:#457B9Dcc"><span class="bar-tip">34.2</span></div>
+                    <div class="css-bar" style="height:55.6%;background:#2A9D8Fcc"><span class="bar-tip">33.4</span></div>
+                    <div class="css-bar" style="height:69.3%;background:#E9C46Acc"><span class="bar-tip">41.6</span></div>
+                    <div class="css-bar" style="height:54.8%;background:#6A0572cc"><span class="bar-tip">32.9</span></div>
+                    <div class="css-bar" style="height:58.9%;background:#FF6B35cc"><span class="bar-tip">35.4</span></div>
+                    <span class="bar-label">MTR</span>
+                </div>
+            </div>
+            <div class="css-chart-legend">
+                <div class="css-legend-item"><div class="css-legend-dot" style="background:#E63946"></div>BraTS-GLI</div>
+                <div class="css-legend-item"><div class="css-legend-dot" style="background:#457B9D"></div>BraTS-MET</div>
+                <div class="css-legend-item"><div class="css-legend-dot" style="background:#2A9D8F"></div>BraTS-MEN</div>
+                <div class="css-legend-item"><div class="css-legend-dot" style="background:#E9C46A"></div>MR-RATE</div>
+                <div class="css-legend-item"><div class="css-legend-dot" style="background:#6A0572"></div>MIMIC-CXR</div>
+                <div class="css-legend-item"><div class="css-legend-dot" style="background:#FF6B35"></div>IU X-ray</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ====== SECTION: SOTA ====== -->
+<div class="viz-section" id="sota">
+    <div class="container">
+        <h2 class="section-title">CARE+ vs <span>State-of-the-Art</span></h2>
+        <p class="section-desc">CARE+ (4B params) vs. larger models (7B-32B) on MIMIC-CXR and IU X-ray benchmarks</p>
+
+        <div class="chart-grid">
+            <div class="chart-card">
+                <h3>MIMIC-CXR — CARE+ vs SOTA Models</h3>
+                <div class="chart-subtitle">CARE+ 4B outperforms 7B+ models across BLEU metrics</div>
+                <div class="css-chart">
+                    <div class="css-bar-group">
+                        <div class="css-bar" style="height:11.3%;background:#E6394699"><span class="bar-tip">4.2</span></div>
+                        <div class="css-bar" style="height:57.5%;background:#457B9D99"><span class="bar-tip">21.4</span></div>
+                        <div class="css-bar" style="height:90.6%;background:#E9C46A99"><span class="bar-tip">33.7</span></div>
+                        <div class="css-bar" style="height:76.6%;background:#6A057299"><span class="bar-tip">28.5</span></div>
+                        <div class="css-bar" style="height:100%;background:#00cec9;border:2px solid #00cec9;"><span class="bar-tip">37.2</span></div>
+                        <span class="bar-label">B-1</span>
+                    </div>
+                    <div class="css-bar-group">
+                        <div class="css-bar" style="height:5.0%;background:#E6394699;min-height:3px;"><span class="bar-tip">1.2</span></div>
+                        <div class="css-bar" style="height:39.0%;background:#457B9D99"><span class="bar-tip">9.4</span></div>
+                        <div class="css-bar" style="height:49.4%;background:#E9C46A99"><span class="bar-tip">11.9</span></div>
+                        <div class="css-bar" style="height:71.3%;background:#6A057299"><span class="bar-tip">17.2</span></div>
+                        <div class="css-bar" style="height:100%;background:#00cec9;border:2px solid #00cec9;"><span class="bar-tip">24.1</span></div>
+                        <span class="bar-label">B-2</span>
+                    </div>
+                    <div class="css-bar-group">
+                        <div class="css-bar" style="height:0%;background:#E6394699;min-height:3px;"><span class="bar-tip">0</span></div>
+                        <div class="css-bar" style="height:21.0%;background:#457B9D99"><span class="bar-tip">3.4</span></div>
+                        <div class="css-bar" style="height:26.5%;background:#E9C46A99"><span class="bar-tip">4.3</span></div>
+                        <div class="css-bar" style="height:66.7%;background:#6A057299"><span class="bar-tip">10.8</span></div>
+                        <div class="css-bar" style="height:100%;background:#00cec9;border:2px solid #00cec9;"><span class="bar-tip">16.2</span></div>
+                        <span class="bar-label">B-3</span>
+                    </div>
+                    <div class="css-bar-group">
+                        <div class="css-bar" style="height:0%;background:#E6394699;min-height:3px;"><span class="bar-tip">0</span></div>
+                        <div class="css-bar" style="height:7.3%;background:#457B9D99;min-height:3px;"><span class="bar-tip">0.8</span></div>
+                        <div class="css-bar" style="height:13.6%;background:#E9C46A99"><span class="bar-tip">1.5</span></div>
+                        <div class="css-bar" style="height:59.1%;background:#6A057299"><span class="bar-tip">6.5</span></div>
+                        <div class="css-bar" style="height:100%;background:#00cec9;border:2px solid #00cec9;"><span class="bar-tip">11.0</span></div>
+                        <span class="bar-label">B-4</span>
+                    </div>
+                    <div class="css-bar-group">
+                        <div class="css-bar" style="height:20.2%;background:#E6394699"><span class="bar-tip">6.6</span></div>
+                        <div class="css-bar" style="height:58.1%;background:#457B9D99"><span class="bar-tip">19.0</span></div>
+                        <div class="css-bar" style="height:33.9%;background:#E9C46A99"><span class="bar-tip">11.1</span></div>
+                        <div class="css-bar" style="height:79.2%;background:#6A057299"><span class="bar-tip">25.9</span></div>
+                        <div class="css-bar" style="height:100%;background:#00cec9;border:2px solid #00cec9;"><span class="bar-tip">32.7</span></div>
+                        <span class="bar-label">MTR</span>
+                    </div>
+                </div>
+                <div class="css-chart-legend">
+                    <div class="css-legend-item"><div class="css-legend-dot" style="background:#E63946"></div>Med-LLaVA 7B</div>
+                    <div class="css-legend-item"><div class="css-legend-dot" style="background:#457B9D"></div>Qwen2.5-VL 7B</div>
+                    <div class="css-legend-item"><div class="css-legend-dot" style="background:#E9C46A"></div>MMedPO 7B</div>
+                    <div class="css-legend-item"><div class="css-legend-dot" style="background:#6A0572"></div>Hulu-Med 32B</div>
+                    <div class="css-legend-item"><div class="css-legend-dot" style="background:#00cec9;border:2px solid #00cec9;border-radius:2px;"></div><strong>CARE+ 4B</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-grid" style="margin-top:24px;">
+            <div class="chart-card chart-card-full">
+                <h3>Detailed SOTA Comparison Table</h3>
+                <div class="chart-subtitle">CARE+ (4B, quantized) vs. larger models on MIMIC-CXR</div>
+                <div style="overflow-x:auto;">
+                    <table class="data-table">
+                        <tr><th>Model</th><th>Params</th><th>B-1</th><th>B-2</th><th>B-3</th><th>B-4</th><th>MET</th></tr>
+                        <tr><td class="row-label">Med-LLaVA</td><td>7B</td><td>4.2</td><td>1.2</td><td>0.0</td><td>0.0</td><td>6.6</td></tr>
+                        <tr><td class="row-label">Qwen2.5-VL</td><td>7B</td><td>21.4</td><td>9.4</td><td>3.4</td><td>0.8</td><td>19.0</td></tr>
+                        <tr><td class="row-label">MMedPO</td><td>7B</td><td>33.67</td><td>11.91</td><td>4.28</td><td>1.8</td><td>11.49</td></tr>
+                        <tr><td class="row-label">Hulu-Med</td><td>32B</td><td>28.51</td><td>14.17</td><td>10.8</td><td>6.5</td><td>25.9</td></tr>
+                        <tr style="background:rgba(108,92,231,0.08);"><td class="row-label" style="color:#00cec9;"><strong>CARE+ (Ours)</strong></td><td><strong>4B</strong></td><td class="best">37.18</td><td class="best">24.14</td><td class="best">16.17</td><td class="best">10.98</td><td class="best">32.68</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ====== SECTION: Ablation ====== -->
+<div class="viz-section" id="ablation">
+    <div class="container">
+        <h2 class="section-title">Brain MRI <span>Ablation Study</span></h2>
+        <p class="section-desc">Progressive addition of loss components — showing BLEU-4 gains</p>
+
+        <div class="chart-grid">
+            <div class="chart-card">
+                <h3>BraTS-GLI — Ablation (BLEU-4)</h3>
+                <div class="chart-subtitle">CE Baseline (10.25) &rarr; Full CARE+ (17.42) = +70%</div>
+                <div class="css-hbar">
+                    <div class="css-hbar-row"><div class="css-hbar-label">CE Base</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:58.8%;background:#E63946cc;">10.25</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">+ ACC</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:67.0%;background:#457B9Dcc;">11.68</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">+ AUL</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:76.5%;background:#2A9D8Fcc;">13.33</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">+ VLCC</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:90.9%;background:#E9C46Acc;">15.84</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">Full CARE+</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:100%;background:#00cec9;border:2px solid #00cec9;"><strong>17.42</strong></div></div></div>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>BraTS-MET — Ablation (BLEU-4)</h3>
+                <div class="chart-subtitle">CE Baseline (7.14) &rarr; Full CARE+ (13.00) = +82%</div>
+                <div class="css-hbar">
+                    <div class="css-hbar-row"><div class="css-hbar-label">CE Base</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:54.9%;background:#E63946cc;">7.14</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">+ ACC</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:67.5%;background:#457B9Dcc;">8.78</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">+ AUL</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:82.0%;background:#2A9D8Fcc;">10.66</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">+ VLCC</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:90.1%;background:#E9C46Acc;">11.71</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">Full CARE+</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:100%;background:#00cec9;border:2px solid #00cec9;"><strong>13.00</strong></div></div></div>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>BraTS-MEN — Ablation (BLEU-4)</h3>
+                <div class="chart-subtitle">CE Baseline (7.32) &rarr; Full CARE+ (12.67) = +73%</div>
+                <div class="css-hbar">
+                    <div class="css-hbar-row"><div class="css-hbar-label">CE Base</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:57.8%;background:#E63946cc;">7.32</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">+ ACC</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:65.4%;background:#457B9Dcc;">8.28</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">+ AUL</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:75.9%;background:#2A9D8Fcc;">9.62</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">+ VLCC</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:85.2%;background:#E9C46Acc;">10.80</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">Full CARE+</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:100%;background:#00cec9;border:2px solid #00cec9;"><strong>12.67</strong></div></div></div>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>MR-RATE — Ablation (BLEU-4)</h3>
+                <div class="chart-subtitle">CE Baseline (14.39) &rarr; Full CARE+ (21.88) = +52%</div>
+                <div class="css-hbar">
+                    <div class="css-hbar-row"><div class="css-hbar-label">CE Base</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:65.8%;background:#E63946cc;">14.39</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">+ ACC</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:74.3%;background:#457B9Dcc;">16.26</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">+ AUL</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:84.6%;background:#2A9D8Fcc;">18.51</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">+ VLCC</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:93.1%;background:#E9C46Acc;">20.38</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">Full CARE+</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:100%;background:#00cec9;border:2px solid #00cec9;"><strong>21.88</strong></div></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-card chart-card-full" style="margin-top:24px;">
+            <h3>Relative Gain (%) — CE Baseline to Full CARE+</h3>
+            <div class="chart-subtitle">Percentage improvement per metric across 4 brain MRI datasets</div>
+            <div class="css-chart css-chart-tall">
+                <div class="css-bar-group"><div class="css-bar" style="height:29%;background:#E63946cc"><span class="bar-tip">24%</span></div><div class="css-bar" style="height:37%;background:#457B9Dcc"><span class="bar-tip">30%</span></div><div class="css-bar" style="height:32%;background:#2A9D8Fcc"><span class="bar-tip">26%</span></div><div class="css-bar" style="height:24%;background:#E9C46Acc"><span class="bar-tip">20%</span></div><span class="bar-label">B-1</span></div>
+                <div class="css-bar-group"><div class="css-bar" style="height:46%;background:#E63946cc"><span class="bar-tip">38%</span></div><div class="css-bar" style="height:55%;background:#457B9Dcc"><span class="bar-tip">45%</span></div><div class="css-bar" style="height:49%;background:#2A9D8Fcc"><span class="bar-tip">40%</span></div><div class="css-bar" style="height:37%;background:#E9C46Acc"><span class="bar-tip">30%</span></div><span class="bar-label">B-2</span></div>
+                <div class="css-bar-group"><div class="css-bar" style="height:63%;background:#E63946cc"><span class="bar-tip">52%</span></div><div class="css-bar" style="height:76%;background:#457B9Dcc"><span class="bar-tip">62%</span></div><div class="css-bar" style="height:67%;background:#2A9D8Fcc"><span class="bar-tip">55%</span></div><div class="css-bar" style="height:49%;background:#E9C46Acc"><span class="bar-tip">40%</span></div><span class="bar-label">B-3</span></div>
+                <div class="css-bar-group"><div class="css-bar" style="height:85%;background:#E63946cc"><span class="bar-tip">70%</span></div><div class="css-bar" style="height:100%;background:#457B9Dcc"><span class="bar-tip">82%</span></div><div class="css-bar" style="height:89%;background:#2A9D8Fcc"><span class="bar-tip">73%</span></div><div class="css-bar" style="height:63%;background:#E9C46Acc"><span class="bar-tip">52%</span></div><span class="bar-label">B-4</span></div>
+                <div class="css-bar-group"><div class="css-bar" style="height:26%;background:#E63946cc"><span class="bar-tip">21%</span></div><div class="css-bar" style="height:33%;background:#457B9Dcc"><span class="bar-tip">27%</span></div><div class="css-bar" style="height:27%;background:#2A9D8Fcc"><span class="bar-tip">22%</span></div><div class="css-bar" style="height:21%;background:#E9C46Acc"><span class="bar-tip">17%</span></div><span class="bar-label">R-1</span></div>
+                <div class="css-bar-group"><div class="css-bar" style="height:67%;background:#E63946cc"><span class="bar-tip">55%</span></div><div class="css-bar" style="height:79%;background:#457B9Dcc"><span class="bar-tip">65%</span></div><div class="css-bar" style="height:71%;background:#2A9D8Fcc"><span class="bar-tip">58%</span></div><div class="css-bar" style="height:51%;background:#E9C46Acc"><span class="bar-tip">42%</span></div><span class="bar-label">R-2</span></div>
+                <div class="css-bar-group"><div class="css-bar" style="height:39%;background:#E63946cc"><span class="bar-tip">32%</span></div><div class="css-bar" style="height:49%;background:#457B9Dcc"><span class="bar-tip">40%</span></div><div class="css-bar" style="height:41%;background:#2A9D8Fcc"><span class="bar-tip">34%</span></div><div class="css-bar" style="height:32%;background:#E9C46Acc"><span class="bar-tip">26%</span></div><span class="bar-label">R-L</span></div>
+                <div class="css-bar-group"><div class="css-bar" style="height:41%;background:#E63946cc"><span class="bar-tip">34%</span></div><div class="css-bar" style="height:51%;background:#457B9Dcc"><span class="bar-tip">42%</span></div><div class="css-bar" style="height:44%;background:#2A9D8Fcc"><span class="bar-tip">36%</span></div><div class="css-bar" style="height:34%;background:#E9C46Acc"><span class="bar-tip">28%</span></div><span class="bar-label">MTR</span></div>
+            </div>
+            <div class="css-chart-legend">
+                <div class="css-legend-item"><div class="css-legend-dot" style="background:#E63946"></div>BraTS-GLI</div>
+                <div class="css-legend-item"><div class="css-legend-dot" style="background:#457B9D"></div>BraTS-MET</div>
+                <div class="css-legend-item"><div class="css-legend-dot" style="background:#2A9D8F"></div>BraTS-MEN</div>
+                <div class="css-legend-item"><div class="css-legend-dot" style="background:#E9C46A"></div>MR-RATE</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ====== SECTION: Unfreezing ====== -->
+<div class="viz-section" id="unfreezing">
+    <div class="container">
+        <h2 class="section-title">Model <span>Unfreezing</span> Strategy</h2>
+        <p class="section-desc">Progressive unfreezing: LoRA only &rarr; +MLP &rarr; Full Unfreeze (BLEU-4 comparison)</p>
+        <div class="chart-grid">
+            <div class="chart-card">
+                <h3>MIMIC-CXR Unfreezing (BLEU-4)</h3>
+                <div class="chart-subtitle">LoRA &rarr; MLP &rarr; Full</div>
+                <div class="css-hbar">
+                    <div class="css-hbar-row"><div class="css-hbar-label">Freeze (LoRA)</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:84.0%;background:#E63946cc;">8.74</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">+ MLP</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:94.4%;background:#457B9Dcc;">9.82</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">Full Unfreeze</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:100%;background:#00cec9;border:2px solid #00cec9;"><strong>10.40</strong></div></div></div>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>IU X-ray Unfreezing (BLEU-4)</h3>
+                <div class="chart-subtitle">+30% gain from LoRA to Full</div>
+                <div class="css-hbar">
+                    <div class="css-hbar-row"><div class="css-hbar-label">Freeze (LoRA)</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:77.0%;background:#E63946cc;">8.51</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">+ MLP</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:86.2%;background:#457B9Dcc;">9.53</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">Full Unfreeze</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:100%;background:#00cec9;border:2px solid #00cec9;"><strong>11.06</strong></div></div></div>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>BraTS-GLI Unfreezing (BLEU-4)</h3>
+                <div class="chart-subtitle">Glioma dataset</div>
+                <div class="css-hbar">
+                    <div class="css-hbar-row"><div class="css-hbar-label">Freeze (LoRA)</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:74.1%;background:#E63946cc;">12.90</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">+ MLP</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:87.0%;background:#457B9Dcc;">15.16</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">Full Unfreeze</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:100%;background:#00cec9;border:2px solid #00cec9;"><strong>17.42</strong></div></div></div>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>MR-RATE Unfreezing (BLEU-4)</h3>
+                <div class="chart-subtitle">Multi-region brain MRI</div>
+                <div class="css-hbar">
+                    <div class="css-hbar-row"><div class="css-hbar-label">Freeze (LoRA)</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:78.7%;background:#E63946cc;">17.23</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">+ MLP</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:88.3%;background:#457B9Dcc;">19.32</div></div></div>
+                    <div class="css-hbar-row"><div class="css-hbar-label">Full Unfreeze</div><div class="css-hbar-track"><div class="css-hbar-fill" style="width:100%;background:#00cec9;border:2px solid #00cec9;"><strong>21.88</strong></div></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ====== SECTION: Visual Comparisons ====== -->
+<div class="viz-section" id="comparisons">
+    <div class="container">
+        <h2 class="section-title">Visual <span>Comparisons</span></h2>
+        <p class="section-desc">Auto-rotating patient case carousel — medical image inputs with report comparisons. Click any image to enlarge.</p>
+
+        <h3 style="color:var(--accent2);font-size:1.1rem;margin-bottom:16px;">&#x1F3E5; Chest X-ray Reports</h3>
+        <div class="carousel" id="chestCarousel">
+            <div class="carousel-progress"><div class="carousel-progress-bar" id="chestProgress" style="width:33.3%"></div></div>
+            <div class="carousel-track" id="chestTrack">
+                <div class="carousel-slide">
+                    <h4>Patient Case #1 — Chest X-ray</h4>
+                    <div class="img-subtitle">MIMIC-CXR dataset sample</div>
+                    <div class="slide-content">
+                        <div><img src="images/slide13_img1.png" alt="Chest X-ray Case 1" onclick="openModal(this.src)"><div class="img-label">Input Image</div></div>
+                        <div><img src="images/slide13_img0.png" alt="Report comparison" onclick="openModal(this.src)"><div class="img-label">Report Comparison</div></div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <h4>Patient Case #2 — Chest X-ray</h4>
+                    <div class="img-subtitle">Comparison of reference vs baseline vs CARE+</div>
+                    <div class="slide-content">
+                        <div><img src="images/slide14_img3.png" alt="Chest X-ray Case 2" onclick="openModal(this.src)"><div class="img-label">Input Image</div></div>
+                        <div><img src="images/slide14_img2.png" alt="Report comparison" onclick="openModal(this.src)"><div class="img-label">Report Comparison</div></div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <h4>Patient Case #3 — Chest X-ray</h4>
+                    <div class="img-subtitle">IU X-ray dataset sample</div>
+                    <div class="slide-content">
+                        <div><img src="images/slide15_img2.png" alt="Chest X-ray Case 3" onclick="openModal(this.src)"><div class="img-label">Input Image</div></div>
+                        <div><img src="images/slide15_img1.png" alt="Report comparison" onclick="openModal(this.src)"><div class="img-label">Report Comparison</div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-controls">
+                <button class="carousel-btn" onclick="moveCarousel('chest',-1)">&#8249;</button>
+                <button class="carousel-dot active" onclick="goToSlide('chest',0)"></button>
+                <button class="carousel-dot" onclick="goToSlide('chest',1)"></button>
+                <button class="carousel-dot" onclick="goToSlide('chest',2)"></button>
+                <span class="carousel-counter" id="chestCounter">1 / 3</span>
+                <button class="carousel-btn" onclick="moveCarousel('chest',1)">&#8250;</button>
+            </div>
+        </div>
+
+        <h3 style="color:var(--accent3);font-size:1.1rem;margin:36px 0 16px;">&#x1F9E0; Brain MRI Reports</h3>
+        <div class="carousel" id="brainCarousel">
+            <div class="carousel-progress"><div class="carousel-progress-bar" id="brainProgress" style="width:50%"></div></div>
+            <div class="carousel-track" id="brainTrack">
+                <div class="carousel-slide">
+                    <h4>Patient Case #4 — Brain MRI (BraTS-GLI)</h4>
+                    <div class="img-subtitle">Glioma segmentation with generated report</div>
+                    <div class="slide-brain">
+                        <div><img src="images/slide16_img1.png" alt="Brain MRI scan" onclick="openModal(this.src)"><div class="img-label">MRI Scan</div></div>
+                        <div><img src="images/slide16_img2.png" alt="Segmentation" onclick="openModal(this.src)"><div class="img-label">Segmentation</div></div>
+                        <div><img src="images/slide16_img0.png" alt="Report comparison" onclick="openModal(this.src)" style="max-height:350px;object-fit:contain;"><div class="img-label">Report Comparison</div></div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <h4>Patient Case #5 — Brain MRI (BraTS-MET)</h4>
+                    <div class="img-subtitle">Metastasis case with report comparison</div>
+                    <div class="slide-brain">
+                        <div><img src="images/slide17_img1.png" alt="Brain MRI scan" onclick="openModal(this.src)"><div class="img-label">MRI Scan</div></div>
+                        <div><img src="images/slide17_img2.png" alt="Segmentation" onclick="openModal(this.src)"><div class="img-label">Segmentation</div></div>
+                        <div><img src="images/slide17_img0.png" alt="Report comparison" onclick="openModal(this.src)" style="max-height:350px;object-fit:contain;"><div class="img-label">Report Comparison</div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-controls">
+                <button class="carousel-btn" onclick="moveCarousel('brain',-1)">&#8249;</button>
+                <button class="carousel-dot active" onclick="goToSlide('brain',0)"></button>
+                <button class="carousel-dot" onclick="goToSlide('brain',1)"></button>
+                <span class="carousel-counter" id="brainCounter">1 / 2</span>
+                <button class="carousel-btn" onclick="moveCarousel('brain',1)">&#8250;</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ====== SECTION: Full Metrics ====== -->
+<div class="viz-section" id="metrics-tables">
+    <div class="container">
+        <h2 class="section-title">Full <span>Metrics</span> Tables</h2>
+        <p class="section-desc">Complete evaluation metrics — click images to view full resolution</p>
+        <div class="img-gallery">
+            <div class="img-card img-card-full">
+                <h4>Complete Performance Metrics — All Datasets</h4>
+                <div class="img-subtitle">BLEU-1/2/3/4, ROUGE-1/2/L, METEOR across all 6 datasets</div>
+                <div class="scroll-img-container"><img src="images/slide18_img0.png" alt="Full metrics" onclick="openModal(this.src)"></div>
+            </div>
+            <div class="img-card">
+                <h4>Ablation Study Results</h4>
+                <div class="img-subtitle">Contribution of each loss component</div>
+                <div class="scroll-img-container"><img src="images/slide18_img1.png" alt="Ablation results" onclick="openModal(this.src)"></div>
+            </div>
+            <div class="img-card">
+                <h4>Extended Evaluation</h4>
+                <div class="img-subtitle">Supplementary analysis</div>
+                <div class="scroll-img-container"><img src="images/slide19_img0.png" alt="Extended metrics" onclick="openModal(this.src)"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ====== SECTION: Report Quality ====== -->
+<div class="viz-section" id="reports">
+    <div class="container">
+        <h2 class="section-title">Generated Report <span>Quality</span></h2>
+        <p class="section-desc">Color-coded clinical findings analysis — Base vs CARE+ on real patient cases</p>
+
+        <div class="report-section">
+            <h3 style="margin-top:48px;">Color-Coded Report Comparisons</h3>
+            <p class="section-desc" style="margin-bottom:8px;">Detailed finding-level analysis — Ground Truth vs Base Inference vs CARE+</p>
+            <div class="report-legend">
+                <div class="legend-item"><div class="legend-dot matched"></div> Matched Finding (correct)</div>
+                <div class="legend-item"><div class="legend-dot hallucinated"></div> Hallucinated Finding (not in reference)</div>
+                <div class="legend-item"><div class="legend-dot missing"></div> Missing Finding (in reference, not generated)</div>
+            </div>
+            <div class="report-cards-container">
+                <h3 style="color:var(--accent3);font-size:1.15rem;margin-bottom:8px;">&#x1F9E0; Brain MRI Cases</h3>
+                <!-- Case 1: BraTS2021_01013 -->
+                <div class="report-case">
+                    <div class="report-case-header">
+                        <h4>BraTS2021_01013 — Brain MRI (Glioma)</h4>
+                        <div style="display:flex;gap:12px;">
+                            <div class="sim-score" style="background:rgba(231,76,60,0.15);color:#e74c3c;font-size:1rem;">Base: M3 H9 P6</div>
+                            <div class="sim-score sim-100" style="font-size:1rem;">CARE+: M6 H8 P6</div>
+                        </div>
+                    </div>
+                    <div class="report-col" style="margin-bottom:16px;">
+                        <div class="report-col-label"><span class="col-badge" style="background:rgba(233,196,106,0.2);color:#E9C46A;">Ground Truth</span></div>
+                        <div class="report-text">After contrast administration, there is a conspicuous <span class="finding-matched">ring-like enhancement</span> of the lesion, with <span class="finding-matched">poorly defined borders</span> and no evidence of effect on <span class="finding-matched">midline structures</span>, sulci, gyri, ventricles, or cisterns.</div>
+                    </div>
+                    <div class="report-columns">
+                        <div class="report-col">
+                            <div class="report-col-label"><span class="col-badge" style="background:rgba(231,76,60,0.2);color:#e74c3c;">Inference (Base)</span></div>
+                            <div class="report-text">FINDINGS: The <span class="finding-matched">ventricles</span> and <span class="finding-matched">sulci</span> are <span class="finding-matched">normal in size</span>. There is <span class="finding-hallucinated">no evidence of a mass</span>, <span class="finding-hallucinated">hemorrhage</span>, or <span class="finding-hallucinated">extra-axial collection</span>. The <span class="finding-hallucinated">gray-white differentiation is preserved</span>. <span class="finding-hallucinated">paranasal sinuses</span>, <span class="finding-hallucinated">mastoid air cells</span>, <span class="finding-hallucinated">nasopharynx</span>, <span class="finding-hallucinated">orbits</span> unremarkable. IMPRESSION: <span class="finding-hallucinated">No acute intracranial abnormality</span>.</div>
+                            <div class="findings-summary"><span class="finding-stat stat-matched">Matched: 3</span><span class="finding-stat stat-hall">Hallucinated: 9</span><span class="finding-stat stat-miss">Missing: 6</span></div>
+                        </div>
+                        <div class="report-col">
+                            <div class="report-col-label"><span class="col-badge col-badge-gen">CARE+ (Ours)</span></div>
+                            <div class="report-text"><strong>Location:</strong> <span class="finding-hallucinated">right frontal-insular-occipital lobe</span>. <strong>Enhancement:</strong> <span class="finding-matched">ring-like enhancement</span> on <span class="finding-hallucinated">T1C sequence</span>. <strong>Size:</strong> <span class="finding-hallucinated">4.8 &times; 4.4 &times; 4 cm</span>. <strong>Border:</strong> <span class="finding-matched">borders</span> are <span class="finding-matched">poorly defined</span>. <strong>Effect:</strong> <span class="finding-hallucinated">mild compression</span> of <span class="finding-hallucinated">right lateral ventricle</span>. <span class="finding-matched">No midline shift</span>.</div>
+                            <div class="findings-summary"><span class="finding-stat stat-matched">Matched: 6</span><span class="finding-stat stat-hall">Hallucinated: 8</span><span class="finding-stat stat-miss">Missing: 6</span></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Case 2: BraTS2021_00694 -->
+                <div class="report-case">
+                    <div class="report-case-header">
+                        <h4>BraTS2021_00694 — Brain MRI (Metastasis)</h4>
+                        <div style="display:flex;gap:12px;">
+                            <div class="sim-score" style="background:rgba(231,76,60,0.15);color:#e74c3c;font-size:1rem;">Base: M0 H12 P10</div>
+                            <div class="sim-score sim-100" style="font-size:1rem;">CARE+: M5 H3 P4</div>
+                        </div>
+                    </div>
+                    <div class="report-col" style="margin-bottom:16px;">
+                        <div class="report-col-label"><span class="col-badge" style="background:rgba(233,196,106,0.2);color:#E9C46A;">Ground Truth</span></div>
+                        <div class="report-text">Lesion in the <span class="finding-matched">right parietal lobe</span> demonstrates <span class="finding-matched">ring enhancement</span> with <span class="finding-matched">poorly defined margins</span>. The <span class="finding-matched">right lateral ventricle is compressed</span>, and there is a <span class="finding-matched">leftward shift</span> of <span class="finding-matched">midline structures</span>.</div>
+                    </div>
+                    <div class="report-columns">
+                        <div class="report-col">
+                            <div class="report-col-label"><span class="col-badge" style="background:rgba(231,76,60,0.2);color:#e74c3c;">Inference (Base)</span></div>
+                            <div class="report-text"><span class="finding-hallucinated">Ventricular system normal</span>. <span class="finding-hallucinated">No mass lesion</span>. <span class="finding-hallucinated">No midline shift</span>. <span class="finding-hallucinated">No hydrocephalus</span>. <span class="finding-hallucinated">Brainstem</span> and <span class="finding-hallucinated">posterior fossa</span> unremarkable. IMPRESSION: <span class="finding-hallucinated">Unremarkable MRI</span>.</div>
+                            <div class="findings-summary"><span class="finding-stat stat-matched">Matched: 0</span><span class="finding-stat stat-hall">Hallucinated: 12</span><span class="finding-stat stat-miss">Missing: 10</span></div>
+                        </div>
+                        <div class="report-col">
+                            <div class="report-col-label"><span class="col-badge col-badge-gen">CARE+ (Ours)</span></div>
+                            <div class="report-text"><span class="finding-matched">After contrast</span>, lesion in <span class="finding-hallucinated">right frontotemporal lobe</span> shows ring-like enhancement. <span class="finding-matched">Boundaries remain unclear</span>, measures <span class="finding-hallucinated">45 &times; 60 &times; 50 mm</span>. <span class="finding-hallucinated">No effect on midline</span>.</div>
+                            <div class="findings-summary"><span class="finding-stat stat-matched">Matched: 5</span><span class="finding-stat stat-hall">Hallucinated: 3</span><span class="finding-stat stat-miss">Missing: 4</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="color:var(--accent2);font-size:1.15rem;margin:36px 0 8px;">&#x1F3E5; Chest X-ray Cases</h3>
+                <!-- Case 3: 31_IM-0018378 -->
+                <div class="report-case">
+                    <div class="report-case-header">
+                        <h4>31_IM-0018378 — PICC Line + Enlarged Heart</h4>
+                        <div style="display:flex;gap:12px;">
+                            <div class="sim-score" style="background:rgba(231,76,60,0.15);color:#e74c3c;font-size:1rem;">Base: M2 H11 P8</div>
+                            <div class="sim-score sim-100" style="font-size:1rem;">CARE+: M8 H5 P2</div>
+                        </div>
+                    </div>
+                    <div class="report-col" style="margin-bottom:16px;">
+                        <div class="report-col-label"><span class="col-badge" style="background:rgba(233,196,106,0.2);color:#E9C46A;">Ground Truth</span></div>
+                        <div class="report-text"><span class="finding-matched">Lungs are clear</span>. <span class="finding-matched">Cardiac silhouette is enlarged</span>. <span class="finding-matched">Aorta is tortuous</span>. No <span class="finding-matched">pleural effusion</span>. <span class="finding-matched">Right-sided PICC line terminates in the low SVC</span>.</div>
+                    </div>
+                    <div class="report-columns">
+                        <div class="report-col">
+                            <div class="report-col-label"><span class="col-badge" style="background:rgba(231,76,60,0.2);color:#e74c3c;">Inference (Base)</span></div>
+                            <div class="report-text">Heart <span class="finding-hallucinated">within normal limits</span>. Lungs <span class="finding-matched">clear</span>. <span class="finding-hallucinated">Mediastinum unremarkable</span>. <span class="finding-hallucinated">Bones intact</span>. <span class="finding-hallucinated">Central line</span> in <span class="finding-hallucinated">right subclavian vein</span>. <span class="finding-hallucinated">No obvious acute findings</span>.</div>
+                            <div class="findings-summary"><span class="finding-stat stat-matched">Matched: 2</span><span class="finding-stat stat-hall">Hallucinated: 11</span><span class="finding-stat stat-miss">Missing: 8</span></div>
+                        </div>
+                        <div class="report-col">
+                            <div class="report-col-label"><span class="col-badge col-badge-gen">CARE+ (Ours)</span></div>
+                            <div class="report-text"><span class="finding-matched">PICC</span>, <span class="finding-matched">clear</span> lungs, <span class="finding-matched">no pleural effusion</span>. <span class="finding-matched">Right-sided PICC terminates in low SVC</span>. Heart <span class="finding-hallucinated">normal in size</span>. <span class="finding-matched">Lungs appear clear</span>. No acute disease.</div>
+                            <div class="findings-summary"><span class="finding-stat stat-matched">Matched: 8</span><span class="finding-stat stat-hall">Hallucinated: 5</span><span class="finding-stat stat-miss">Missing: 2</span></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Case 4: 307_IM-0007094 -->
+                <div class="report-case">
+                    <div class="report-case-header">
+                        <h4>307_IM-0007094 — Enteric Tube + Normal Study</h4>
+                        <div style="display:flex;gap:12px;">
+                            <div class="sim-score" style="background:rgba(231,76,60,0.15);color:#e74c3c;font-size:1rem;">Base: M4 H8 P5</div>
+                            <div class="sim-score sim-100" style="font-size:1rem;">CARE+: M9 H3 P2</div>
+                        </div>
+                    </div>
+                    <div class="report-col" style="margin-bottom:16px;">
+                        <div class="report-col-label"><span class="col-badge" style="background:rgba(233,196,106,0.2);color:#E9C46A;">Ground Truth</span></div>
+                        <div class="report-text"><span class="finding-matched">Heart size normal</span>. <span class="finding-matched">Mediastinal/hilar contours normal</span>. <span class="finding-matched">Lungs clear</span>. <span class="finding-matched">No pleural effusion or pneumothorax</span>. <span class="finding-matched">Enteric tube terminates in upper stomach</span>.</div>
+                    </div>
+                    <div class="report-columns">
+                        <div class="report-col">
+                            <div class="report-col-label"><span class="col-badge" style="background:rgba(231,76,60,0.2);color:#e74c3c;">Inference (Base)</span></div>
+                            <div class="report-text">Lungs <span class="finding-matched">clear</span>. Heart <span class="finding-matched">within normal limits</span>. <span class="finding-hallucinated">Endotracheal tube visible</span> — patient <span class="finding-hallucinated">intubated</span>. <span class="finding-missing">Nasogastric tube</span> visible.</div>
+                            <div class="findings-summary"><span class="finding-stat stat-matched">Matched: 4</span><span class="finding-stat stat-hall">Hallucinated: 8</span><span class="finding-stat stat-miss">Missing: 5</span></div>
+                        </div>
+                        <div class="report-col">
+                            <div class="report-col-label"><span class="col-badge col-badge-gen">CARE+ (Ours)</span></div>
+                            <div class="report-text"><span class="finding-matched">Heart normal</span>. <span class="finding-matched">Mediastinal/hilar contours</span> normal. <span class="finding-matched">Lungs clear</span>. <span class="finding-matched">No pleural effusions</span> or pneumothorax. <span class="finding-matched">No acute cardiopulmonary disease</span>. <span class="finding-hallucinated">Endotracheal tube</span> in standard position.</div>
+                            <div class="findings-summary"><span class="finding-stat stat-matched">Matched: 9</span><span class="finding-stat stat-hall">Hallucinated: 3</span><span class="finding-stat stat-miss">Missing: 2</span></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Case 5: 134_IM-0014957 -->
+                <div class="report-case">
+                    <div class="report-case-header">
+                        <h4>134_IM-0014957 — Large Left Pleural Effusion</h4>
+                        <div style="display:flex;gap:12px;">
+                            <div class="sim-score" style="background:rgba(231,76,60,0.15);color:#e74c3c;font-size:1rem;">Base: M4 H11 P4</div>
+                            <div class="sim-score sim-100" style="font-size:1rem;">CARE+: M6 H3 P3</div>
+                        </div>
+                    </div>
+                    <div class="report-col" style="margin-bottom:16px;">
+                        <div class="report-col-label"><span class="col-badge" style="background:rgba(233,196,106,0.2);color:#E9C46A;">Ground Truth</span></div>
+                        <div class="report-text"><span class="finding-matched">Large left pleural effusion</span>. Right lung clear. <span class="finding-matched">Atherosclerotic calcifications of aortic arch</span>. Likely <span class="finding-matched">atelectasis</span> of left lower lobe.</div>
+                    </div>
+                    <div class="report-columns">
+                        <div class="report-col">
+                            <div class="report-col-label"><span class="col-badge" style="background:rgba(231,76,60,0.2);color:#e74c3c;">Inference (Base)</span></div>
+                            <div class="report-text"><span class="finding-matched">Large Left Pleural Effusion</span>. Right lung <span class="finding-matched">relatively clear</span>. Heart <span class="finding-hallucinated">normal</span>. Implications: <span class="finding-hallucinated">Heart failure</span>, <span class="finding-hallucinated">Infection</span>, <span class="finding-hallucinated">Cancer</span>, <span class="finding-hallucinated">Trauma</span>.</div>
+                            <div class="findings-summary"><span class="finding-stat stat-matched">Matched: 4</span><span class="finding-stat stat-hall">Hallucinated: 11</span><span class="finding-stat stat-miss">Missing: 4</span></div>
+                        </div>
+                        <div class="report-col">
+                            <div class="report-col-label"><span class="col-badge col-badge-gen">CARE+ (Ours)</span></div>
+                            <div class="report-text"><span class="finding-matched">Large left pleural effusion</span> with <span class="finding-matched">atelectasis</span>. <span class="finding-matched">Right lung clear</span>. Heart <span class="finding-hallucinated">normal</span>. <span class="finding-matched">No pneumothorax</span>.</div>
+                            <div class="findings-summary"><span class="finding-stat stat-matched">Matched: 6</span><span class="finding-stat stat-hall">Hallucinated: 3</span><span class="finding-stat stat-miss">Missing: 3</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2025 Lakshman Rohith Sanagapalli &middot; CARE+ Framework Research Visualizations &middot; <a href="index.html">Portfolio</a></p>
+    </div>
+</footer>
+
+<script>
+function openModal(src) {
+    document.getElementById('imgModalSrc').src = src;
+    document.getElementById('imgModal').style.display = 'block';
+}
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') document.getElementById('imgModal').style.display='none'; });
+document.querySelectorAll('.nav-pill').forEach(function(p){
+    p.addEventListener('click', function(){ document.querySelectorAll('.nav-pill').forEach(function(x){x.classList.remove('active');}); this.classList.add('active'); });
+});
+
+/* ===== Carousel Logic ===== */
+var carousels = {
+    chest: { index: 0, total: 3, timer: null },
+    brain: { index: 0, total: 2, timer: null }
+};
+
+function updateCarousel(name) {
+    var c = carousels[name];
+    var track = document.getElementById(name + 'Track');
+    var counter = document.getElementById(name + 'Counter');
+    var progress = document.getElementById(name + 'Progress');
+    var container = document.getElementById(name + 'Carousel');
+    var dots = container.querySelectorAll('.carousel-dot');
+
+    track.style.transform = 'translateX(-' + (c.index * 100) + '%)';
+    counter.textContent = (c.index + 1) + ' / ' + c.total;
+    progress.style.width = ((c.index + 1) / c.total * 100) + '%';
+
+    dots.forEach(function(d, i) {
+        d.classList.toggle('active', i === c.index);
+    });
+}
+
+function moveCarousel(name, dir) {
+    var c = carousels[name];
+    c.index = (c.index + dir + c.total) % c.total;
+    updateCarousel(name);
+    resetAutoPlay(name);
+}
+
+function goToSlide(name, idx) {
+    carousels[name].index = idx;
+    updateCarousel(name);
+    resetAutoPlay(name);
+}
+
+function resetAutoPlay(name) {
+    if (carousels[name].timer) clearInterval(carousels[name].timer);
+    carousels[name].timer = setInterval(function() {
+        moveCarousel(name, 1);
+    }, 5000);
+}
+
+// Start auto-play for both carousels
+resetAutoPlay('chest');
+resetAutoPlay('brain');
+</script>
+</body>
+</html>
 
